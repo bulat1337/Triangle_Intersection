@@ -22,36 +22,6 @@ class Triangle
 
 	Vec normal_;
 
-	Vec& max_vec(Vec& vec_1, Vec& vec_2, Vec& vec_3)
-	{
-		if (vec_1.sq_length() > vec_2.sq_length())
-		{
-			if (vec_1.sq_length() > vec_3.sq_length())
-			{
-				std::clog << "Fist vector is max\n";
-				return vec_1;
-			}
-			else
-			{
-				std::cout << "Third vector is max\n";
-				return vec_3;
-			}
-		}
-		else
-		{
-			if (vec_2.sq_length() > vec_3.sq_length())
-			{
-				std::cout << "Second vector is max\n";
-				return vec_2;
-			}
-			else
-			{
-				std::cout << "Third vector is max\n";
-				return vec_3;
-			}
-		}
-	}
-
   public:
 	Triangle(const Point& pnt_1, const Point& pnt_2, const Point& pnt_3):
 		pnt_1_(pnt_1), pnt_2_(pnt_2), pnt_3_(pnt_3)
@@ -59,83 +29,65 @@ class Triangle
 		std::clog << "Generic constructor called\n";
 	}
 
-// 	Triangle(	const Point3& pnt_1
-// 				, const Point3& pnt_2
-// 				, const Point3& pnt_3) requires(std::is_same_v<Point, Point3>)
-// 	{
-// 		std::clog << "Sorting contructor called\n";
-//
-// 		normal_ = cross(pnt_2 - pnt_1, pnt_3 - pnt_1);
-// 		if (utils::cmp_double(normal_.sq_length(), 0) != 0)	normal_ = unit_vector(normal_);
-// 		else std::clog << "normal vector is null sized\n";
-//
-// 		std::array<Point, 3> points = {pnt_1, pnt_2, pnt_3};
-//
-// 		Point center = (pnt_1 + pnt_2 + pnt_3) / 3.0;
-//
-// 		Point axis_x = Point(1.0, 0.0, 0.0);
-// 		Point axis_y = Point(0.0, 1.0, 0.0);
-// 		Point axis_z = Point(0.0, 0.0, 1.0);
-//
-// 		Vec nx_cross = cross(axis_x, normal_);
-// 		Vec ny_cross = cross(axis_y, normal_);
-// 		Vec nz_cross = cross(axis_z, normal_);
-//
-// 		Point p = max_vec(nx_cross, ny_cross, nz_cross);
-//
-// 		if (utils::cmp_double(p.sq_length(), 0) != 0) p = unit_vector(p);
-// 		else std::clog << "p vector is null sized\n";
-//
-// 		Point q = cross(normal_, p);
-// 		if (utils::cmp_double(q.sq_length(), 0) != 0) q = unit_vector(q);
-// 		else std::clog << "q vector is null sized\n";
-//
-// 		std::clog << "before sorting:\n";
-// 		for(const auto& point : points)
-// 		{
-// 			std::clog 	<< point.x()
-// 						<< ' '
-// 						<< point.y()
-// 						<< ' '
-// 						<< point.z()
-// 						<< '\n';
-// 		}
-//
-// 		std::sort(	points.begin()
-// 					, points.end()
-// 					, [&center, this, &p, &q](const Point& p1, const Point& p2)
-// 		{
-// 			Vec r1 = p1 - center;
-// 			Vec r2 = p2 - center;
-//
-// 			double t1 = dot(normal_, cross(r1, p));
-// 			double u1 = dot(normal_, cross(r1, q));
-// 			double t2 = dot(normal_, cross(r2, p));
-// 			double u2 = dot(normal_, cross(r2, q));
-//
-// 			std::clog << "t1 = " << t1 << '\n';
-// 			std::clog << "u1 = " << u1 << '\n';
-// 			std::clog << "t2 = " << t2 << '\n';
-// 			std::clog << "u2 = " << u2 << '\n';
-//
-// 			return utils::cmp_double(atan2(u2, t2), atan2(u1, t1)) < 0;
-// 		});
-//
-// 		std::clog << "after sorting:\n";
-// 		for(const auto& point : points)
-// 		{
-// 			std::clog 	<< point.x()
-// 						<< ' '
-// 						<< point.y()
-// 						<< ' '
-// 						<< point.z()
-// 						<< '\n';
-// 		}
-//
-// 		pnt_1_ = points[0];
-// 		pnt_2_ = points[1];
-// 		pnt_3_ = points[2];
-// 	}
+	Triangle(	const Point3& pnt_1
+				, const Point3& pnt_2
+				, const Point3& pnt_3) requires(std::is_same_v<Point, Point3>)
+	{
+		std::clog << "Sorting constructor called\n";
+
+		normal_ = cross(pnt_2 - pnt_1, pnt_3 - pnt_1);
+		if (utils::cmp_double(normal_.sq_length(), 0) != 0)
+			normal_ = unit_vector(normal_);
+		else std::clog << "Normal vector is null-sized\n";
+
+		Point center = (pnt_1 + pnt_2 + pnt_3) / 3.0;
+
+		auto dominant_axis = std::max({	std::abs(normal_.x())
+										, std::abs(normal_.y())
+										, std::abs(normal_.z())});
+
+		std::array<Point, 3> points = {pnt_1, pnt_2, pnt_3};
+
+		if (dominant_axis == std::abs(normal_.z()))
+		{
+			// projecting on XY
+			std::sort(points.begin(), points.end(), [&center](const Point& p1, const Point& p2)
+			{
+				double angle1 = atan2(p1.y() - center.y(), p1.x() - center.x());
+				double angle2 = atan2(p2.y() - center.y(), p2.x() - center.x());
+				return angle1 < angle2;
+			});
+		}
+		else if (dominant_axis == std::abs(normal_.x()))
+		{
+			// projecting on YZ
+			std::sort(points.begin(), points.end(), [&center](const Point& p1, const Point& p2)
+			{
+				double angle1 = atan2(p1.z() - center.z(), p1.y() - center.y());
+				double angle2 = atan2(p2.z() - center.z(), p2.y() - center.y());
+				return angle1 < angle2;
+			});
+		}
+		else
+		{
+			// projecting on XZ
+			std::sort(points.begin(), points.end(), [&center](const Point& p1, const Point& p2)
+			{
+				double angle1 = atan2(p1.z() - center.z(), p1.x() - center.x());
+				double angle2 = atan2(p2.z() - center.z(), p2.x() - center.x());
+				return angle1 < angle2;
+			});
+		}
+
+		std::clog << "After sorting:\n";
+		for (const auto& point : points) {
+			std::clog << point.x() << ' ' << point.y() << ' ' << point.z() << '\n';
+		}
+
+		pnt_1_ = points[0];
+		pnt_2_ = points[1];
+		pnt_3_ = points[2];
+	}
 
 	const Point& pnt_1() const { return pnt_1_; }
 	const Point& pnt_2() const { return pnt_2_; }

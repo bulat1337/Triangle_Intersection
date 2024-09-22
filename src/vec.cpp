@@ -140,8 +140,6 @@ std::ostream &operator << (std::ostream &out, const Vec3 &vec3)
 
 double dot(const Vec3 &lhs, const Vec3 &rhs)
 {
-	std::clog << "Point3 dot product called\n";
-
 	return 	lhs.x() * rhs.x() +
 			lhs.y() * rhs.y() +
 			lhs.z() * rhs.z();
@@ -273,19 +271,8 @@ std::ostream &operator << (std::ostream &out, const Vec2 &vec3)
 
 double dot(const Vec2 &lhs, const Vec2 &rhs)
 {
-	std::clog << "Point2 dot product called\n";
-
-	std::clog << "dot of: " << lhs.x() << " ; " << lhs.y() << '\n';
-	std::clog << "dot of: " << rhs.x() << " ; " << rhs.y() << '\n';
-
 	return 	lhs.x() * rhs.x() +
 			lhs.y() * rhs.y();
-
-//
-//
-// 	std::clog << "Dot product result: " << result << '\n';
-//
-// 	return result;
 }
 
 Vec3 unit_vector(const Vec3 &vector)

@@ -113,14 +113,29 @@ bool intersects3(const Triangle<Point3>& lhs, const Triangle<Point3>& rhs)
 				<< lhs_dists.third() << '\n';
 
 	// 2. Reject as trivial if all points of lhs triangle are on same side.
-	if(lhs_dists.same_sign()) return false;
+	if(lhs_dists.same_sign())
+	{
+		std::clog << "All points of lhs triangle are on same side\n";
+		return false;
+	}
 
 	// 3. Compute plane equation of lhs triangle (pi_1).
 	Plane3 lhs_plane(lhs);
 	Distances rhs_dists(rhs, lhs_plane);
 
+	std::clog 	<< "rhs distances: "
+				<< rhs_dists.first()
+				<< ' '
+				<< rhs_dists.second()
+				<< ' '
+				<< rhs_dists.third() << '\n';
+
 	// 4. Reject as trivial if all points of rhs triangle are on same side.
-	if(rhs_dists.same_sign()) return false;
+	if(rhs_dists.same_sign())
+	{
+		std::clog << "All points of lhs triangle are on same side\n";
+		return false;
+	}
 
 	// 5. If triangles are co-planar solve 2D task
 
