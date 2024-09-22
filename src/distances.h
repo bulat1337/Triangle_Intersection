@@ -46,6 +46,21 @@ class Distances
 				&& std::fabs(third_) < utils::fp_tolerance);
 	}
 
+	double first() const
+	{
+		return first_;
+	}
+
+	double second() const
+	{
+		return second_;
+	}
+
+	double third() const
+	{
+		return third_;
+	}
+
 
 
 };

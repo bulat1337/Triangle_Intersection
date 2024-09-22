@@ -25,6 +25,7 @@ set(RELEASE_COMPILE_OPTIONS
 	-Wcast-align
 	-Wpointer-arith
 	-Wunreachable-code
+	-Wno-pre-c++17-compat
 )
 
 set(DEBUG_COMPILE_OPTIONS
@@ -75,6 +76,7 @@ set(DEBUG_COMPILE_OPTIONS
 	-Wlarger-than=8192
 	-fPIE
 	-Werror=vla
+	-Wno-pre-c++17-compat
 	-fsanitize=address,alignment,bool,bounds,enum,float-cast-overflow,float-divide-by-zero,integer-divide-by-zero,nonnull-attribute,null,return,returns-nonnull-attribute,shift,signed-integer-overflow,undefined,unreachable,vla-bound,vptr
 )
 

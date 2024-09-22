@@ -87,7 +87,7 @@ class Vec2
 
 	Vec2 operator - () const;
 
-	const Vec2& clockwise_normal() const;
+	Vec2 clockwise_normal() const;
 
 	double sq_length() const;
 
@@ -106,6 +106,8 @@ Vec2 operator / (const Vec2 &vec3, double scalar);
 std::ostream& operator << (std::ostream &out, const Vec2 &vec3);
 
 double dot(const Vec2 &lhs, const Vec2 &rhs);
+
+Vec3 unit_vector(const Vec3 &vector);
 
 using Point2 = Vec2;
 
