@@ -85,7 +85,9 @@ set(DEBUG_COMPILE_OPTIONS
 add_library(intersects STATIC
 	src/intersects.cpp
 	src/vec.cpp
-	src/utils.cpp)
+	src/utils.cpp
+	src/distances.cpp
+	src/plane.cpp)
 
 target_include_directories(intersects PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/include

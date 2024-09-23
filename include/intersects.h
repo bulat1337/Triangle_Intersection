@@ -4,6 +4,6 @@
 #include "vec.h"
 #include "triangle.h"
 
-bool intersects3(const Triangle<Point3>& lhs, const Triangle<Point3>& rhs);
+bool intersects3(Triangle<Point3>& lhs, Triangle<Point3>& rhs);
 
 #endif // INTERSECTION_H

@@ -9,6 +9,8 @@
 
 #include "vec.h"
 #include "utils.h"
+#include "distances.h"
+
 
 template <typename Point>
 class Triangle
@@ -71,8 +73,7 @@ class Triangle
 		else
 		{
 			// projecting on XZ
-			std::sort(points.begin(), points.end(), [&center](const Point& p1, const Point& p2)
-			{
+			std::sort(points.begin(), points.end(), [&center](const Point& p1, const Point& p2) {
 				double angle1 = atan2(p1.z() - center.z(), p1.x() - center.x());
 				double angle2 = atan2(p2.z() - center.z(), p2.x() - center.x());
 				return angle1 < angle2;
@@ -80,7 +81,8 @@ class Triangle
 		}
 
 		std::clog << "After sorting:\n";
-		for (const auto& point : points) {
+		for (const auto& point : points)
+		{
 			std::clog << point.x() << ' ' << point.y() << ' ' << point.z() << '\n';
 		}
 
@@ -139,6 +141,33 @@ class Triangle
 		}
 
 		return true;
+	}
+
+	void distance_sort(Distances& dists)
+	{
+		if (utils::sign(dists.second()) != utils::sign(dists.first())
+			&& utils::sign(dists.second()) != utils::sign(dists.third()))
+		{
+			std::clog << "Already sorted\n";
+			return;
+		}
+
+		if (utils::sign(dists.second()) == utils::sign(dists.first()))
+		{
+			std::swap(dists.first(), dists.second());
+			std::swap(dists.second(), dists.third());
+
+			std::swap(pnt_1_, pnt_2_);
+			std::swap(pnt_2_, pnt_3_);
+		}
+		else
+		{
+			std::swap(dists.second(), dists.third());
+			std::swap(dists.first(), dists.second());
+
+			std::swap(pnt_2_, pnt_3_);
+			std::swap(pnt_1_, pnt_2_);
+		}
 	}
 };
 

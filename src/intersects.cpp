@@ -80,27 +80,27 @@ Axis get_min_axis(const Vec3& vec)
 
 Axis get_max_axis(const Vec3& vec)
 {
-    if (utils::cmp_double(vec.x(), vec.y()) >= 0)
-    {
-        if (utils::cmp_double(vec.x(), vec.z()) >= 0)
-        {
-            return Axis::x;
-        }
+	if (utils::cmp_double(vec.x(), vec.y()) >= 0)
+	{
+		if (utils::cmp_double(vec.x(), vec.z()) >= 0)
+		{
+			return Axis::x;
+		}
 
-        return Axis::z;
-    }
-    else
-    {
-        if (utils::cmp_double(vec.y(), vec.z()) >= 0)
-        {
-            return Axis::y;
-        }
+		return Axis::z;
+	}
+	else
+	{
+		if (utils::cmp_double(vec.y(), vec.z()) >= 0)
+		{
+			return Axis::y;
+		}
 
-        return Axis::z;
-    }
+		return Axis::z;
+	}
 }
 
-bool intersects3(const Triangle<Point3>& lhs, const Triangle<Point3>& rhs)
+bool intersects3(Triangle<Point3>& lhs, Triangle<Point3>& rhs)
 {
 	//	1. Compute plane equation of rhs triangle (pi_2).
 	Plane3 rhs_plane(rhs);
@@ -200,50 +200,85 @@ bool intersects3(const Triangle<Point3>& lhs, const Triangle<Point3>& rhs)
 	double rhs_min = 0.0;
 	double rhs_max = 0.0;
 
+
+	lhs.distance_sort(lhs_dists);
+	rhs.distance_sort(rhs_dists);
+
+	std::clog	<< "lhs after sorting:\n"
+				<< lhs.pnt_1() << '\n'
+				<< lhs.pnt_2() << '\n'
+				<< lhs.pnt_3() << '\n';
+
+	std::clog	<< "rhs after sorting:\n"
+				<< rhs.pnt_1() << '\n'
+				<< rhs.pnt_2() << '\n'
+				<< rhs.pnt_3() << '\n';
+
 	switch(max_axis)
 	{
 		case Axis::x:
 		{
-			double sim_coeff = lhs_dists.first() / std::fabs(lhs_dists.first() - lhs_dists.second());
+			std::clog << "Projecting points on x\n";
+			double sim_coeff = lhs_dists.first() / (lhs_dists.first() - lhs_dists.second());
 			lhs_min = lhs.pnt_1().x() + (lhs.pnt_2().x() - lhs.pnt_1().x()) * sim_coeff;
 
-			sim_coeff = lhs_dists.third() / std::fabs(lhs_dists.second() - lhs_dists.third());
+			std::clog 	<< "lhs_min = " << lhs.pnt_1().x() << " + ("
+						<< lhs.pnt_2().x() << " - "
+						<< lhs.pnt_1().x() << " )"
+						<< " * " << sim_coeff << '\n';
+
+			sim_coeff = lhs_dists.third() / (lhs_dists.third() - lhs_dists.second());
 			lhs_max = lhs.pnt_2().x() + (lhs.pnt_3().x() - lhs.pnt_2().x()) * sim_coeff;
 
-			sim_coeff = rhs_dists.first() / std::fabs(rhs_dists.first() - rhs_dists.second());;
+			sim_coeff = rhs_dists.first() / (rhs_dists.first() - rhs_dists.second());;
 			rhs_min = rhs.pnt_1().x() + (rhs.pnt_2().x() - rhs.pnt_1().x()) * sim_coeff;
 
-			sim_coeff = rhs_dists.third() / std::fabs(rhs_dists.second() - rhs_dists.third());
+			std::clog 	<< "rhs_min = " << rhs.pnt_1().x() << " + ("
+						<< rhs.pnt_2().x() << " - "
+						<< rhs.pnt_1().x() << " )"
+						<< " * " << sim_coeff << '\n';
+
+			sim_coeff = rhs_dists.third() / (rhs_dists.third() - rhs_dists.second());
 			rhs_max = rhs.pnt_2().x() + (rhs.pnt_3().x() - rhs.pnt_2().x()) * sim_coeff;
 			break;
 		}
 		case Axis::y:
 		{
-			double sim_coeff = lhs_dists.first() / std::fabs(lhs_dists.first() - lhs_dists.second());
+			std::clog << "Projecting points on y\n";
+			double sim_coeff = lhs_dists.first() / (lhs_dists.first() - lhs_dists.second());
 			lhs_min = lhs.pnt_1().y() + (lhs.pnt_2().y() - lhs.pnt_1().y()) * sim_coeff;
 
-			sim_coeff = lhs_dists.third() / std::fabs(lhs_dists.second() - lhs_dists.third());
+			sim_coeff = lhs_dists.third() / (lhs_dists.third() - lhs_dists.second());
 			lhs_max = lhs.pnt_2().y() + (lhs.pnt_3().y() - lhs.pnt_2().y()) * sim_coeff;
 
-			sim_coeff = rhs_dists.first() / std::fabs(rhs_dists.first() - rhs_dists.second());
+			sim_coeff = rhs_dists.first() / (rhs_dists.first() - rhs_dists.second());
 			rhs_min = rhs.pnt_1().y() + (rhs.pnt_2().y() - rhs.pnt_1().y()) * sim_coeff;
 
-			sim_coeff = rhs_dists.third() / std::fabs(rhs_dists.second() - rhs_dists.third());
+			sim_coeff = rhs_dists.third() / (rhs_dists.third() - rhs_dists.second());
 			rhs_max = rhs.pnt_2().y() + (rhs.pnt_3().y() - rhs.pnt_2().y()) * sim_coeff;
 			break;
 		}
 		case Axis::z:
 		{
-			double sim_coeff = lhs_dists.first() / std::fabs(lhs_dists.first() - lhs_dists.second());
+			std::clog << "Projecting points on z\n";
+			double sim_coeff = lhs_dists.first() / (lhs_dists.first() - lhs_dists.second());
 			lhs_min = lhs.pnt_1().z() + (lhs.pnt_2().z() - lhs.pnt_1().z()) * sim_coeff;
 
-			sim_coeff = lhs_dists.third() / std::fabs(lhs_dists.second() - lhs_dists.third());
+			std::clog 	<< "sim_coeff = "
+						<< lhs_dists.first()
+						<< " / ( "
+						<< lhs_dists.first()
+						<< " - "
+						<< lhs_dists.second()
+						<< " )\n";
+
+			sim_coeff = lhs_dists.third() / (lhs_dists.third() - lhs_dists.second());
 			lhs_max = lhs.pnt_2().z() + (lhs.pnt_3().z() - lhs.pnt_2().z()) * sim_coeff;
 
-			sim_coeff = rhs_dists.first() / std::fabs(rhs_dists.first() - rhs_dists.second());
+			sim_coeff = rhs_dists.first() / (rhs_dists.first() - rhs_dists.second());
 			rhs_min = rhs.pnt_1().z() + (rhs.pnt_2().z() - rhs.pnt_1().z()) * sim_coeff;
 
-			sim_coeff = rhs_dists.third() / std::fabs(rhs_dists.second() - rhs_dists.third());
+			sim_coeff = rhs_dists.third() / (rhs_dists.third() - rhs_dists.second());
 			rhs_max = rhs.pnt_2().z() + (rhs.pnt_3().z() - rhs.pnt_2().z()) * sim_coeff;
 			break;
 		}
