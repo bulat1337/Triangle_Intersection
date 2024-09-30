@@ -89,6 +89,8 @@ bool intersects3(Triangle3& lhs, Triangle3& rhs)
 	//	1. Compute plane equation of rhs triangle (pi_2).
 
 	Plane3 rhs_plane(rhs);
+	std::clog << "rhs_plane normal: " << rhs_plane.normal() << '\n';
+
 	Distances lhs_dists(lhs, rhs_plane);
 
 	std::clog 	<< "lhs distances: "
@@ -107,6 +109,8 @@ bool intersects3(Triangle3& lhs, Triangle3& rhs)
 
 	// 3. Compute plane equation of lhs triangle (pi_1).
 	Plane3 lhs_plane(lhs);
+	std::clog << "lhs_plane normal: " << lhs_plane.normal() << '\n';
+
 	Distances rhs_dists(rhs, lhs_plane);
 
 	std::clog 	<< "rhs distances: "
