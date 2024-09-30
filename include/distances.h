@@ -22,7 +22,6 @@ class Distances
 	}
 
   public:
-	// Declaration of the constructor
 	Distances(const Triangle<Point3>& triangle, const Plane3& plane);
 
 	double first() const { return first_; }

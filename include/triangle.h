@@ -25,6 +25,8 @@ class Triangle
 	Vec normal_;
 
   public:
+	Triangle() = default;
+
 	Triangle(const Point& pnt_1, const Point& pnt_2, const Point& pnt_3):
 		pnt_1_(pnt_1), pnt_2_(pnt_2), pnt_3_(pnt_3)
 	{
@@ -50,7 +52,7 @@ class Triangle
 
 		std::array<Point, 3> points = {pnt_1, pnt_2, pnt_3};
 
-		if (dominant_axis == std::abs(normal_.z()))
+		if (utils::cmp_double(dominant_axis, std::abs(normal_.z())) == 0)
 		{
 			// projecting on XY
 			std::sort(points.begin(), points.end(), [&center](const Point& p1, const Point& p2)
@@ -60,7 +62,7 @@ class Triangle
 				return angle1 < angle2;
 			});
 		}
-		else if (dominant_axis == std::abs(normal_.x()))
+		else if (utils::cmp_double(dominant_axis, std::abs(normal_.x())))
 		{
 			// projecting on YZ
 			std::sort(points.begin(), points.end(), [&center](const Point& p1, const Point& p2)
@@ -169,6 +171,46 @@ class Triangle
 			std::swap(pnt_1_, pnt_2_);
 		}
 	}
+
+	Triangle& operator = (const Triangle& other)
+	{
+		pnt_1_ = other.pnt_1();
+		pnt_2_ = other.pnt_2();
+		pnt_3_ = other.pnt_3();
+
+		return *this;
+	}
+
+// 	Triangle<Point2> project(Axis max_normal_axis) const
+// 	{
+// 		switch(max_normal_axis)
+// 		{
+// 			case Axis::x:
+// 				#ifdef ENABLE_LOGGING
+// 				std::clog << "Projecting on Oyz\n";
+// 				#endif
+//
+// 				return Triangle<Point2>(  Point2(pnt_1_.y(), pnt_1_.z())
+// 										, Point2(pnt_2_.y(), pnt_2_.z())
+// 										, Point2(pnt_3_.y(), pnt_3_.z()));
+// 			case Axis::y:
+// 				#ifdef ENABLE_LOGGING
+// 				std::clog << "Projecting on Oxz\n";
+// 				#endif
+//
+// 				return Triangle<Point2>(  Point2(pnt_1_.x(), pnt_1_.z())
+// 										, Point2(pnt_2_.x(), pnt_2_.z())
+// 										, Point2(pnt_3_.x(), pnt_3_.z()));
+// 			case Axis::z:
+// 				#ifdef ENABLE_LOGGING
+// 				std::clog << "Projecting on Oxy\n";
+// 				#endif
+//
+// 				return Triangle<Point2>(  Point2(pnt_1_.x(), pnt_1_.y())
+// 										, Point2(pnt_2_.x(), pnt_2_.y())
+// 										, Point2(pnt_3_.x(), pnt_3_.y()));
+// 		}
+	// }
 };
 
 #endif // TRIANGLE_H

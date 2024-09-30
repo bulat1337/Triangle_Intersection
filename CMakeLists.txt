@@ -1,11 +1,21 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.14)
 
 project(Main)
 
 enable_testing()
+add_subdirectory(unit_tests/)
+add_subdirectory(${CMAKE_SOURCE_DIR}/unit_tests/test_utils)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  GIT_REPOSITORY https://github.com/google/googletest.git
+  GIT_TAG        release-1.12.1
+)
+FetchContent_MakeAvailable(googletest)
 
 option(ENABLE_LOGGING "Enable logging" ON)
 option(DEBUG "Debug version" ON)
@@ -90,8 +100,7 @@ add_library(intersects STATIC
 	src/plane.cpp)
 
 target_include_directories(intersects PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/include
-	${CMAKE_CURRENT_SOURCE_DIR}/src)
+	${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 if(ENABLE_LOGGING)
 	target_compile_definitions(intersects PRIVATE ENABLE_LOGGING)
@@ -129,35 +138,5 @@ else()
 endif()
 
 target_link_libraries(intersect.x PRIVATE intersects)
+target_link_libraries(intersect.x PRIVATE gtest gtest_main)
 
-
-# ----- tests -----
-set(TESTS ./tests)
-
-file(GLOB testfiles "${TESTS}/*.dat")
-file(GLOB_RECURSE subfolder_testfiles "${TESTS}/**/*.dat")
-list(APPEND testfiles ${subfolder_testfiles})
-
-foreach(file ${testfiles})
-	add_test(
-		NAME ${file}
-		COMMAND bash -c "${CMAKE_SOURCE_DIR}/runtest.sh ${file} ./intersect.x"
-		WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-	set_tests_properties(${file} PROPERTIES DEPENDS intersect.x)
-endforeach()
-
-if(ENABLE_BIG_TESTS)
-	set(BD_TESTS ./big_data_tests)
-
-	file(GLOB big_data_tests "${BD_TESTS}/*.dat")
-	file(GLOB_RECURSE bd_subfolder_testfiles "${BD_TESTS}/**/*.dat")
-	list(APPEND big_data_tests ${bd_subfolder_testfiles})
-
-	foreach(file ${big_data_tests})
-		add_test(
-			NAME bd_${file}
-			COMMAND bash -c "${CMAKE_SOURCE_DIR}/runtest.sh ${file} ./intersect.x"
-			WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-		set_tests_properties(bd_${file} PROPERTIES DEPENDS intersect.x)
-	endforeach()
-endif()
