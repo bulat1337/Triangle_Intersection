@@ -3,8 +3,7 @@
 
 #include "vec.h"
 
-template <typename Point>
-class Triangle;
+class Triangle3;
 
 class Plane3
 {
@@ -20,7 +19,7 @@ class Plane3
 		normal_(cross(pnt_2 - pnt_1, pnt_3 - pnt_1))
 		, origin_(-dot(normal_, pnt_1)) {}
 
-	Plane3(const Triangle<Point3>& triangle);
+	Plane3(const Triangle3& triangle);
 
 	const Vec3& normal() const { return normal_; }
 	double origin() const { return origin_; }

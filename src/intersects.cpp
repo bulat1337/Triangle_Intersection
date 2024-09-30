@@ -16,7 +16,7 @@ enum class Axis
 
 namespace
 {
-	Triangle<Point2> project(const Triangle<Point3>& triangle, Axis max_normal_axis)
+	Triangle2 project(const Triangle3& triangle, Axis max_normal_axis)
 	{
 		switch(max_normal_axis)
 		{
@@ -25,7 +25,7 @@ namespace
 				std::clog << "Projecting on Oyz\n";
 				#endif
 
-				return Triangle<Point2>(  Point2(triangle.pnt_1().y(), triangle.pnt_1().z())
+				return Triangle2(  Point2(triangle.pnt_1().y(), triangle.pnt_1().z())
 										, Point2(triangle.pnt_2().y(), triangle.pnt_2().z())
 										, Point2(triangle.pnt_3().y(), triangle.pnt_3().z()));
 			case Axis::y:
@@ -33,7 +33,7 @@ namespace
 				std::clog << "Projecting on Oxz\n";
 				#endif
 
-				return Triangle<Point2>(  Point2(triangle.pnt_1().x(), triangle.pnt_1().z())
+				return Triangle2(  Point2(triangle.pnt_1().x(), triangle.pnt_1().z())
 										, Point2(triangle.pnt_2().x(), triangle.pnt_2().z())
 										, Point2(triangle.pnt_3().x(), triangle.pnt_3().z()));
 			case Axis::z:
@@ -41,13 +41,13 @@ namespace
 				std::clog << "Projecting on Oxy\n";
 				#endif
 
-				return Triangle<Point2>(  Point2(triangle.pnt_1().x(), triangle.pnt_1().y())
+				return Triangle2(  Point2(triangle.pnt_1().x(), triangle.pnt_1().y())
 										, Point2(triangle.pnt_2().x(), triangle.pnt_2().y())
 										, Point2(triangle.pnt_3().x(), triangle.pnt_3().y()));
 		}
 	}
 
-	bool intersects2(const Triangle<Point2>& lhs, const Triangle<Point2>& rhs)
+	bool intersects2(const Triangle2& lhs, const Triangle2& rhs)
 	{
 		for (size_t lhs_side_id = 0; lhs_side_id < 3; ++lhs_side_id)
 		{
@@ -111,7 +111,8 @@ namespace
 		}
 	}
 }
-bool intersects3(Triangle<Point3>& lhs, Triangle<Point3>& rhs)
+
+bool intersects3(Triangle3& lhs, Triangle3& rhs)
 {
 	//	1. Compute plane equation of rhs triangle (pi_2).
 

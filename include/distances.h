@@ -6,8 +6,7 @@
 #include "plane.h"
 #include "utils.h"
 
-template <typename Point>
-class Triangle;
+class Triangle3;
 
 class Distances
 {
@@ -22,7 +21,7 @@ class Distances
 	}
 
   public:
-	Distances(const Triangle<Point3>& triangle, const Plane3& plane);
+	Distances(const Triangle3& triangle, const Plane3& plane);
 
 	double first() const { return first_; }
 	double second() const { return second_; }

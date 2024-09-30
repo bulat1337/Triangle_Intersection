@@ -2,7 +2,7 @@
 
 #include "triangle.h"
 
-Distances::Distances(const Triangle<Point3>& triangle, const Plane3& plane)
+Distances::Distances(const Triangle3& triangle, const Plane3& plane)
 	: first_(calc_dist(triangle.pnt_1(), plane)),
 	  second_(calc_dist(triangle.pnt_2(), plane)),
 	  third_(calc_dist(triangle.pnt_3(), plane))

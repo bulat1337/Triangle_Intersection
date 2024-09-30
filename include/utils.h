@@ -1,6 +1,8 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+class Vec3;
+
 namespace utils
 {
 	const double fp_tolerance = 1e-8;
@@ -9,8 +11,9 @@ namespace utils
 	template <typename T>
 	int sign(T val)
 	{
-    	return (T(0) < val) - (val < T(0));
+		return (T(0) < val) - (val < T(0));
 	}
+	
 }
 
 
