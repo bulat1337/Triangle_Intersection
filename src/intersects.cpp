@@ -6,21 +6,15 @@
 #include "distances.h"
 #include "segment.h"
 #include "interval.h"
-
-enum class Axis
-{
-	x
-	, y
-	, z
-};
+#include "utils.h"
 
 namespace
 {
-	Triangle2 project(const Triangle3& triangle, Axis max_normal_axis)
+	Triangle2 project(const Triangle3& triangle, utils::Axis max_normal_axis)
 	{
 		switch(max_normal_axis)
 		{
-			case Axis::x:
+			case utils::Axis::x:
 				#ifdef ENABLE_LOGGING
 				std::clog << "Projecting on Oyz\n";
 				#endif
@@ -28,7 +22,7 @@ namespace
 				return Triangle2(  Point2(triangle.pnt_1().y(), triangle.pnt_1().z())
 										, Point2(triangle.pnt_2().y(), triangle.pnt_2().z())
 										, Point2(triangle.pnt_3().y(), triangle.pnt_3().z()));
-			case Axis::y:
+			case utils::Axis::y:
 				#ifdef ENABLE_LOGGING
 				std::clog << "Projecting on Oxz\n";
 				#endif
@@ -36,7 +30,7 @@ namespace
 				return Triangle2(  Point2(triangle.pnt_1().x(), triangle.pnt_1().z())
 										, Point2(triangle.pnt_2().x(), triangle.pnt_2().z())
 										, Point2(triangle.pnt_3().x(), triangle.pnt_3().z()));
-			case Axis::z:
+			case utils::Axis::z:
 				#ifdef ENABLE_LOGGING
 				std::clog << "Projecting on Oxy\n";
 				#endif
@@ -88,28 +82,6 @@ namespace
 
 		return false;
 	}
-
-	Axis get_max_axis(const Vec3& vec)
-	{
-		if (utils::cmp_double(vec.x(), vec.y()) >= 0)
-		{
-			if (utils::cmp_double(vec.x(), vec.z()) >= 0)
-			{
-				return Axis::x;
-			}
-
-			return Axis::z;
-		}
-		else
-		{
-			if (utils::cmp_double(vec.y(), vec.z()) >= 0)
-			{
-				return Axis::y;
-			}
-
-			return Axis::z;
-		}
-	}
 }
 
 bool intersects3(Triangle3& lhs, Triangle3& rhs)
@@ -159,7 +131,7 @@ bool intersects3(Triangle3& lhs, Triangle3& rhs)
 		std::clog << "It's 2D case.\n";
 		#endif
 
-		Axis max_normal_axis = get_max_axis(lhs_plane.normal());
+		utils::Axis max_normal_axis = utils::get_max_axis(lhs_plane.normal());
 
 		std::clog 	<< "Plane normal: "
 					<< lhs_plane.normal().x() << ' '
@@ -174,7 +146,7 @@ bool intersects3(Triangle3& lhs, Triangle3& rhs)
 
 	Vec3 intersection_line = cross(lhs_plane.normal(), rhs_plane.normal());
 
-	Axis max_axis = get_max_axis(intersection_line);
+	utils::Axis max_axis = utils::get_max_axis(intersection_line);
 
 	double lhs_min = 0.0;
 	double lhs_max = 0.0;
@@ -197,7 +169,7 @@ bool intersects3(Triangle3& lhs, Triangle3& rhs)
 
 	switch(max_axis)
 	{
-		case Axis::x:
+		case utils::Axis::x:
 		{
 			std::clog << "Projecting points on x\n";
 			double sim_coeff = lhs_dists.first() / (lhs_dists.first() - lhs_dists.second());
@@ -225,7 +197,7 @@ bool intersects3(Triangle3& lhs, Triangle3& rhs)
 			rhs_max = rhs.pnt_3().x() + (rhs.pnt_2().x() - rhs.pnt_3().x()) * sim_coeff;
 			break;
 		}
-		case Axis::y:
+		case utils::Axis::y:
 		{
 			std::clog << "Projecting points on y\n";
 			double sim_coeff = lhs_dists.first() / (lhs_dists.first() - lhs_dists.second());
@@ -241,7 +213,7 @@ bool intersects3(Triangle3& lhs, Triangle3& rhs)
 			rhs_max = rhs.pnt_3().y() + (rhs.pnt_2().y() - rhs.pnt_3().y()) * sim_coeff;
 			break;
 		}
-		case Axis::z:
+		case utils::Axis::z:
 		{
 			std::clog << "Projecting points on z\n";
 			double sim_coeff = lhs_dists.first() / (lhs_dists.first() - lhs_dists.second());

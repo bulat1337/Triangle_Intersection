@@ -13,7 +13,10 @@ namespace utils
 	{
 		return (T(0) < val) - (val < T(0));
 	}
-	
+
+	enum class Axis { x , y , z };
+
+	Axis get_max_axis(const Vec3& vec);
 }
 
 

@@ -97,7 +97,8 @@ add_library(intersects STATIC
 	src/vec.cpp
 	src/utils.cpp
 	src/distances.cpp
-	src/plane.cpp)
+	src/plane.cpp
+	src/triangle.cpp)
 
 target_include_directories(intersects PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -120,8 +121,7 @@ endif()
 
 add_executable(intersect.x ./main.cpp)
 target_include_directories(intersect.x PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/include
-	${CMAKE_CURRENT_SOURCE_DIR}/src)
+	${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 if(ENABLE_LOGGING)
 	target_compile_definitions(intersect.x PRIVATE ENABLE_LOGGING)
