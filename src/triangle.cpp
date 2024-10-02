@@ -57,7 +57,7 @@ void Triangle3::sort_vertices(std::array<Point3, 3>& points)
 	}
 
 	MSG("After sorting:\n");
-	for (const auto& point : points)
+	for ([[maybe_unused]]const auto& point : points)
 	{
 		LOG("{} {} {}\n", point.x(), point.y(), point.z());
 	}

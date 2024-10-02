@@ -17,8 +17,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-option(ENABLE_LOGGING "Enable logging" ON)
-option(DEBUG "Debug version" ON)
+option(ENABLE_LOGGING "Enable logging" OFF)
+option(DEBUG "Debug version" OFF)
 option(ENABLE_BIG_TESTS "Enables big data tests" OFF)
 
 set(RELEASE_COMPILE_OPTIONS
@@ -98,7 +98,8 @@ add_library(intersects STATIC
 	src/utils.cpp
 	src/distances.cpp
 	src/plane.cpp
-	src/triangle.cpp)
+	src/triangle.cpp
+	src/spatial_hash.cpp)
 
 target_include_directories(intersects PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -109,6 +110,7 @@ endif()
 
 if(DEBUG)
 	target_compile_options(intersects PRIVATE ${DEBUG_COMPILE_OPTIONS})
+	target_compile_definitions(intersects PRIVATE DEBUG)
 
 	target_link_options(intersects PRIVATE
 		-fsanitize=address,alignment,bool,bounds,enum,float-cast-overflow,float-divide-by-zero,nonnull-attribute,null,return,returns-nonnull-attribute,shift,signed-integer-overflow,undefined,unreachable,vla-bound,vptr
@@ -128,6 +130,7 @@ if(ENABLE_LOGGING)
 endif()
 
 if(DEBUG)
+	target_compile_definitions(intersect.x PRIVATE DEBUG)
 	target_compile_options(intersect.x PRIVATE ${DEBUG_COMPILE_OPTIONS})
 
 	target_link_options(intersect.x PRIVATE
@@ -138,5 +141,4 @@ else()
 endif()
 
 target_link_libraries(intersect.x PRIVATE intersects)
-target_link_libraries(intersect.x PRIVATE gtest gtest_main)
 

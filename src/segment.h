@@ -101,7 +101,6 @@ class Segment2
 
 		return false;
 	}
-
 };
 
 std::ostream& operator << (std::ostream& out, const Segment2& sgm)
