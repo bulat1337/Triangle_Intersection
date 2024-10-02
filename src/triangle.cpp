@@ -8,13 +8,15 @@
 #include "vec.h"
 #include "utils.h"
 #include "distances.h"
+#include "log.h"
 
 void Triangle3::sort_vertices(std::array<Point3, 3>& points)
 {
 	Vec3 normal = cross(points[1] - points[0], points[2] - points[0]);
 	if (utils::cmp_double(normal.sq_length(), 0) != 0)
 		normal = unit_vector(normal);
-	else std::clog << "Normal vector is null-sized\n";
+
+	MSG("Normal vector is null-sized\n");
 
 	Point3 center = (points[0] + points[1] + points[2]) / 3.0;
 
@@ -54,10 +56,10 @@ void Triangle3::sort_vertices(std::array<Point3, 3>& points)
 			break;
 	}
 
-	std::clog << "After sorting:\n";
+	MSG("After sorting:\n");
 	for (const auto& point : points)
 	{
-		std::clog << point.x() << ' ' << point.y() << ' ' << point.z() << '\n';
+		LOG("{} {} {}\n", point.x(), point.y(), point.z());
 	}
 }
 
@@ -76,10 +78,10 @@ Triangle3::Triangle3(	const Point3& pnt_1
 
 void Triangle3::distance_sort(Distances& dists)
 {
-	if (utils::sign(dists.second()) != utils::sign(dists.first())
+	if    (utils::sign(dists.second()) != utils::sign(dists.first())
 		&& utils::sign(dists.second()) != utils::sign(dists.third()))
 	{
-		std::clog << "Already sorted\n";
+		MSG("Already sorted\n");
 		return;
 	}
 
@@ -101,6 +103,11 @@ void Triangle3::distance_sort(Distances& dists)
 	}
 }
 
+Point3&       Triangle3::min_cell()      { return min_cell_; }
+const Point3& Triangle3::min_cell() const { return min_cell_; }
+Point3&       Triangle3::max_cell()       { return max_cell_; }
+const Point3& Triangle3::max_cell() const { return max_cell_; }
+
 
 Triangle2::Triangle2(const Point2& pnt_1, const Point2& pnt_2, const Point2& pnt_3):
 	Triangle_Base(pnt_1, pnt_2, pnt_3) {}
@@ -113,16 +120,17 @@ bool Triangle2::contains(const Triangle2& other) const
 	Vec2 a_to_c   = pnt_3_ - pnt_1_;
 
 	double ab_norm_proj = dot(a_to_pnt, a_to_b.clockwise_normal());
-	std::clog << "ab_norm_proj = " << ab_norm_proj << '\n';
+	LOG("ab_norm_proj = {}\n", ab_norm_proj);
+
 	double ac_norm_proj = dot(a_to_pnt, a_to_c.clockwise_normal());
-	std::clog << "ac_norm_proj = " << ac_norm_proj << '\n';
+	LOG("ac_norm_proj = {}\n", ab_norm_proj);
 
 	bool ab_proj_sign = utils::cmp_double(ab_norm_proj, 0) > 0;
 	bool ac_proj_sign = utils::cmp_double(ac_norm_proj, 0) > 0;
 
 	if (ab_proj_sign == ac_proj_sign)
 	{
-		std::clog << "ab_proj_sign == ac_proj_sign\n";
+		MSG("ab_proj_sign == ac_proj_sign\n");
 		return false;
 	}
 
@@ -135,7 +143,7 @@ bool Triangle2::contains(const Triangle2& other) const
 
 	if (bc_proj_sign != ab_proj_sign)
 	{
-		std::clog << "bc_proj_sign != ab_proj_sign\n";
+		MSG("bc_proj_sign != ab_proj_sign\n");
 		return false;
 	}
 

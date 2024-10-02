@@ -45,7 +45,16 @@ double &Vec3::z()
 	return z_;
 }
 
-Vec3 &Vec3::operator += (const Vec3 &other)
+Vec3& Vec3::operator =(const Vec3& other)
+{
+	x_ = other.x_;
+	y_ = other.y_;
+	z_ = other.z_;
+
+	return *this;
+}
+
+Vec3& Vec3::operator += (const Vec3 &other)
 {
 	x_ += other.x_;
 	y_ += other.y_;
@@ -54,7 +63,7 @@ Vec3 &Vec3::operator += (const Vec3 &other)
 	return *this;
 }
 
-Vec3 &Vec3::operator *= (double scalar)
+Vec3& Vec3::operator *= (double scalar)
 {
 	x_ *= scalar;
 	y_ *= scalar;
@@ -63,7 +72,7 @@ Vec3 &Vec3::operator *= (double scalar)
 	return *this;
 }
 
-Vec3 &Vec3::operator /= (double scalar)
+Vec3& Vec3::operator /= (double scalar)
 {
 	return *this *= (1 / scalar);
 }
@@ -71,6 +80,13 @@ Vec3 &Vec3::operator /= (double scalar)
 Vec3 Vec3::operator - () const
 {
 	return Vec3(-x_, -y_, -z_);
+}
+
+bool Vec3::operator ==(const Vec3& other) const
+{
+	return 	   utils::cmp_double(x_, other.x_) == 0
+			&& utils::cmp_double(y_, other.y_) == 0
+			&& utils::cmp_double(z_, other.z_) == 0;
 }
 
 double Vec3::sq_length() const
@@ -152,6 +168,20 @@ Vec3 cross(const Vec3& lhs, const Vec3& rhs)
 				lhs.x() * rhs.y() - lhs.y() * rhs.x());
 }
 
+std::istream& operator >> (std::istream& is, Vec3& vec)
+{
+    double x, y, z;
+
+    if (is >> x >> y >> z)
+    {
+        vec.x() = x;
+        vec.y() = y;
+        vec.z() = z;
+    }
+
+    return is;
+}
+
 
 // ------------------ Vec2 ------------------
 
@@ -203,6 +233,13 @@ Vec2 &Vec2::operator /= (double scalar)
 Vec2 Vec2::operator - () const
 {
 	return Vec2(-x_, -y_);
+}
+
+std::ostream &operator << (std::ostream &out, const Vec2 &vec2)
+{
+	out << vec2.x() << ' ' << vec2.y();
+
+	return out;
 }
 
 double Vec2::sq_length() const
@@ -260,13 +297,6 @@ Vec2 operator * (double scalar, const Vec2 &vec3)
 Vec2 operator / (const Vec2 &vec3, double scalar)
 {
 	return vec3 * (1 / scalar);
-}
-
-std::ostream &operator << (std::ostream &out, const Vec2 &vec3)
-{
-	out << vec3.x() << ' ' << vec3.y();
-
-	return out;
 }
 
 double dot(const Vec2 &lhs, const Vec2 &rhs)

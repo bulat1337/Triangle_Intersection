@@ -19,12 +19,21 @@ class Triangle_Base
   public:
   	Triangle_Base() = default;
 
-  	Triangle_Base(const Point2& pnt_1, const Point2& pnt_2, const Point2& pnt_3):
+  	Triangle_Base(const Point& pnt_1, const Point& pnt_2, const Point& pnt_3):
 		pnt_1_(pnt_1), pnt_2_(pnt_2), pnt_3_(pnt_3) {}
+
+
+	Triangle_Base(const Triangle_Base& other):
+		pnt_1_(other.pnt_1_), pnt_2_(other.pnt_2_), pnt_3_(other.pnt_3_) {}
+
 
   	const Point& pnt_1() const { return pnt_1_; }
 	const Point& pnt_2() const { return pnt_2_; }
 	const Point& pnt_3() const { return pnt_3_; }
+
+  	Point& pnt_1() { return pnt_1_; }
+	Point& pnt_2() { return pnt_2_; }
+	Point& pnt_3() { return pnt_3_; }
 
 	const Point& operator [] (size_t pnt_id) const
 	{
@@ -47,10 +56,30 @@ class Triangle_Base
 	}
 };
 
+template <typename Point>
+std::istream& operator >> (std::istream& is, Triangle_Base<Point>& triangle)
+{
+    Point pnt_1, pnt_2, pnt_3;
+
+    if (is >> pnt_1 >> pnt_2 >> pnt_3)
+    {
+        triangle.pnt_1() = pnt_1;
+        triangle.pnt_2() = pnt_2;
+        triangle.pnt_3() = pnt_3;
+    }
+
+    return is;
+}
+
+
 class Triangle3 : public Triangle_Base<Point3>
 {
   private:
+	Point3 min_cell_;
+	Point3 max_cell_;
+
 	static void sort_vertices(std::array<Point3, 3>& points);
+
   public:
 	// разбить на функции
 	Triangle3(	const Point3& pnt_1
@@ -58,6 +87,11 @@ class Triangle3 : public Triangle_Base<Point3>
 				, const Point3& pnt_3);
 
 	void distance_sort(Distances& dists);
+
+	Point3&       min_cell();
+	const Point3& min_cell() const;
+	Point3&       max_cell();
+	const Point3& max_cell() const;
 };
 
 class Triangle2 : public Triangle_Base<Point2>

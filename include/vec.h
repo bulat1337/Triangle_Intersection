@@ -17,6 +17,8 @@ class Vec3
 
 	Vec3(double x, double y, double z);
 
+	Vec3(const Vec3& other) = default;
+
 	const double &x() const;
 
 	const double &y() const;
@@ -29,13 +31,17 @@ class Vec3
 
 	double &z() ;
 
-	Vec3 &operator +=(const Vec3 &other);
+	Vec3& operator =(const Vec3& other);
 
-	Vec3 &operator *=(double scalar);
+	Vec3& operator +=(const Vec3& other);
 
-	Vec3 &operator /=(double scalar);
+	Vec3& operator *=(double scalar);
+
+	Vec3& operator /=(double scalar);
 
 	Vec3 operator - () const;
+
+	bool operator ==(const Vec3& other) const;
 
 	double sq_length() const;
 
@@ -52,6 +58,7 @@ Vec3 operator * (double scalar, const Vec3 &vec3);
 Vec3 operator / (const Vec3 &vec3, double scalar);
 
 std::ostream&	operator << (std::ostream &out, const Vec3 &vec3);
+std::istream&   operator >> (std::istream& is, Vec3& vec);
 
 double 			dot		(const Vec3 &lhs, const Vec3 &rhs);
 Vec3 			cross 	(const Vec3& lhs, const Vec3& rhs);

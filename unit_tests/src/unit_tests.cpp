@@ -285,6 +285,8 @@ TEST(threeDimentional, basic_4)
 	EXPECT_EQ(intersects3(triangle_1, triangle_2), false);
 }
 
+// треугольник(1.0|4.0|3.0 2.0|2.0|2.0 -3.0|2.0|1.5)
+// треугольник(5.0|4.0|-2.5 8.0|2.0|4.0 3.5|2.5|3.5)
 TEST(threeDimentional, basic_5)
 {
 	Point3 A1(1.0, 4.0, 3.0);

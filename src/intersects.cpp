@@ -15,25 +15,19 @@ namespace
 		switch(max_normal_axis)
 		{
 			case utils::Axis::x:
-				#ifdef ENABLE_LOGGING
-				std::clog << "Projecting on Oyz\n";
-				#endif
+				MSG("Projecting on Oyz\n");
 
 				return Triangle2(  Point2(triangle.pnt_1().y(), triangle.pnt_1().z())
 										, Point2(triangle.pnt_2().y(), triangle.pnt_2().z())
 										, Point2(triangle.pnt_3().y(), triangle.pnt_3().z()));
 			case utils::Axis::y:
-				#ifdef ENABLE_LOGGING
-				std::clog << "Projecting on Oxz\n";
-				#endif
+				MSG("Projecting on Oxz\n");
 
 				return Triangle2(  Point2(triangle.pnt_1().x(), triangle.pnt_1().z())
 										, Point2(triangle.pnt_2().x(), triangle.pnt_2().z())
 										, Point2(triangle.pnt_3().x(), triangle.pnt_3().z()));
 			case utils::Axis::z:
-				#ifdef ENABLE_LOGGING
-				std::clog << "Projecting on Oxy\n";
-				#endif
+				MSG("Projecting on Oxy\n");
 
 				return Triangle2(  Point2(triangle.pnt_1().x(), triangle.pnt_1().y())
 										, Point2(triangle.pnt_2().x(), triangle.pnt_2().y())
@@ -50,80 +44,65 @@ namespace
 			{
 				Segment2 rhs_side(rhs[rhs_side_id], rhs[rhs_side_id >= 2 ? 0 : rhs_side_id + 1]);
 
-				std::clog 	<< "Testing if "
-							<< rhs_side.pnt_1().x() << ' '
-							<< rhs_side.pnt_1().y() << ' '
-							<< "to "
-							<< rhs_side.pnt_2().x() << ' '
-							<< rhs_side.pnt_2().y() << '\n'
-							<< "intersects "
-							<< lhs_side.pnt_1().x() << ' '
-							<< lhs_side.pnt_1().y() << ' '
-							<< "to "
-							<< lhs_side.pnt_2().x() << ' '
-							<< lhs_side.pnt_2().y() << '\n';
+				LOG("Testing if side {} intersects {}\n", lhs_side_id, rhs_side_id);
 
 				if (lhs_side.intersects(rhs_side))
 				{
-					std::clog << "Yes they do\n";
+					MSG("Yes they do\n");
 					return true;
 				}
-				std::clog << "No they are not\n";
+				MSG("No they are not\n");
 			}
 		}
 
-		std::clog << "Checking if rhs is in lhs\n";
+		MSG("Checking if rhs is in lhs\n");
 		if (lhs.contains(rhs)) return true;
-		std::clog << "No it's not\n";
+		MSG("No it's not\n");
 
-		std::clog << "Checking if lhs is in rhs\n";
+		MSG("Checking if lhs is in rhs\n");
 		if (rhs.contains(lhs)) return true;
-		std::clog << "No it's not\n";
+		MSG("No it's not\n");
 
 		return false;
 	}
 }
 
-bool intersects3(Triangle3& lhs, Triangle3& rhs)
+bool intersects3(Triangle3 lhs, Triangle3 rhs)
 {
 	//	1. Compute plane equation of rhs triangle (pi_2).
 
 	Plane3 rhs_plane(rhs);
-	std::clog << "rhs_plane normal: " << rhs_plane.normal() << '\n';
+	LOG( "rhs_plane normal: ({}, {}, {})\n"
+		, rhs_plane.normal().x()
+		, rhs_plane.normal().y()
+		, rhs_plane.normal().z());
 
 	Distances lhs_dists(lhs, rhs_plane);
 
-	std::clog 	<< "lhs distances: "
-				<< lhs_dists.first()
-				<< ' '
-				<< lhs_dists.second()
-				<< ' '
-				<< lhs_dists.third() << '\n';
+	LOG("lhs distances: {} {} {}\n", lhs_dists.first(), lhs_dists.second(), lhs_dists.third());
 
 	// 2. Reject as trivial if all points of lhs triangle are on same side.
 	if(lhs_dists.same_sign())
 	{
-		std::clog << "All points of lhs triangle are on same side\n";
+		MSG("All points of lhs triangle are on same side\n");
 		return false;
 	}
 
 	// 3. Compute plane equation of lhs triangle (pi_1).
 	Plane3 lhs_plane(lhs);
-	std::clog << "lhs_plane normal: " << lhs_plane.normal() << '\n';
+	LOG( "lhs_plane normal: ({}, {}, {})\n"
+		, lhs_plane.normal().x()
+		, lhs_plane.normal().y()
+		, lhs_plane.normal().z());
 
 	Distances rhs_dists(rhs, lhs_plane);
 
-	std::clog 	<< "rhs distances: "
-				<< rhs_dists.first()
-				<< ' '
-				<< rhs_dists.second()
-				<< ' '
-				<< rhs_dists.third() << '\n';
+	LOG("rhs distances: {} {} {}\n", rhs_dists.first(), rhs_dists.second(), rhs_dists.third());
 
 	// 4. Reject as trivial if all points of rhs triangle are on same side.
 	if(rhs_dists.same_sign())
 	{
-		std::clog << "All points of lhs triangle are on same side\n";
+		MSG("All points of lhs triangle are on same side\n");
 		return false;
 	}
 
@@ -132,15 +111,15 @@ bool intersects3(Triangle3& lhs, Triangle3& rhs)
 	if(lhs_dists.are_trivial() || rhs_dists.are_trivial())
 	{
 		#ifdef ENABLE_LOGGING
-		std::clog << "It's 2D case.\n";
+		MSG("It's 2D case.\n");
 		#endif
 
 		utils::Axis max_normal_axis = utils::get_max_axis(lhs_plane.normal());
 
-		std::clog 	<< "Plane normal: "
-					<< lhs_plane.normal().x() << ' '
-					<< lhs_plane.normal().y() << ' '
-					<< lhs_plane.normal().z() << '\n';
+		LOG( "Plane normal: ({}, {}, {})\n"
+			, lhs_plane.normal().x()
+			, lhs_plane.normal().y()
+			, lhs_plane.normal().z());
 
 		return intersects2(project(lhs, max_normal_axis), project(rhs, max_normal_axis));
 	}
@@ -161,41 +140,19 @@ bool intersects3(Triangle3& lhs, Triangle3& rhs)
 	lhs.distance_sort(lhs_dists);
 	rhs.distance_sort(rhs_dists);
 
-	std::clog	<< "lhs after sorting:\n"
-				<< lhs.pnt_1() << '\n'
-				<< lhs.pnt_2() << '\n'
-				<< lhs.pnt_3() << '\n';
-
-	std::clog	<< "rhs after sorting:\n"
-				<< rhs.pnt_1() << '\n'
-				<< rhs.pnt_2() << '\n'
-				<< rhs.pnt_3() << '\n';
-
 	switch(max_axis)
 	{
 		case utils::Axis::x:
 		{
-			std::clog << "Projecting points on x\n";
+			MSG("Projecting points on x\n");
 			double sim_coeff = lhs_dists.first() / (lhs_dists.first() - lhs_dists.second());
 			lhs_min = lhs.pnt_1().x() + (lhs.pnt_2().x() - lhs.pnt_1().x()) * sim_coeff;
-
-			std::clog 	<< "lhs_min = " << lhs.pnt_1().x() << " + ("
-						<< lhs.pnt_2().x() << " - "
-						<< lhs.pnt_1().x() << " )"
-						<< " * " << sim_coeff << '\n';
 
 			sim_coeff = lhs_dists.third() / (lhs_dists.third() - lhs_dists.second());
 			lhs_max = lhs.pnt_3().x() + (lhs.pnt_2().x() - lhs.pnt_3().x()) * sim_coeff;
 
-
-
 			sim_coeff = rhs_dists.first() / (rhs_dists.first() - rhs_dists.second());;
 			rhs_min = rhs.pnt_1().x() + (rhs.pnt_2().x() - rhs.pnt_1().x()) * sim_coeff;
-
-			std::clog 	<< "rhs_min = " << rhs.pnt_1().x() << " + ("
-						<< rhs.pnt_2().x() << " - "
-						<< rhs.pnt_1().x() << " )"
-						<< " * " << sim_coeff << '\n';
 
 			sim_coeff = rhs_dists.third() / (rhs_dists.third() - rhs_dists.second());
 			rhs_max = rhs.pnt_3().x() + (rhs.pnt_2().x() - rhs.pnt_3().x()) * sim_coeff;
@@ -203,7 +160,7 @@ bool intersects3(Triangle3& lhs, Triangle3& rhs)
 		}
 		case utils::Axis::y:
 		{
-			std::clog << "Projecting points on y\n";
+			MSG("Projecting points on y\n");
 			double sim_coeff = lhs_dists.first() / (lhs_dists.first() - lhs_dists.second());
 			lhs_min = lhs.pnt_1().y() + (lhs.pnt_2().y() - lhs.pnt_1().y()) * sim_coeff;
 
@@ -219,7 +176,7 @@ bool intersects3(Triangle3& lhs, Triangle3& rhs)
 		}
 		case utils::Axis::z:
 		{
-			std::clog << "Projecting points on z\n";
+			MSG("Projecting points on z\n");
 			double sim_coeff = lhs_dists.first() / (lhs_dists.first() - lhs_dists.second());
 			lhs_min = lhs.pnt_1().z() + (lhs.pnt_2().z() - lhs.pnt_1().z()) * sim_coeff;
 
@@ -239,8 +196,8 @@ bool intersects3(Triangle3& lhs, Triangle3& rhs)
 
 	// 8. Intersect the intervals.
 
-	std::clog << "lhs interval: [" << lhs_interval.min() << " ; " << lhs_interval.max() << "]\n";
-	std::clog << "rhs interval: [" << rhs_interval.min() << " ; " << rhs_interval.max() << "]\n";
+	LOG("lhs interval: [{} , {}]\n", lhs_interval.min(), lhs_interval.max());
+	LOG("rhs interval: [{} , {}]\n", rhs_interval.min(), rhs_interval.max());
 	if (lhs_interval.max() < rhs_interval.min()) return false;
 	if (rhs_interval.max() < lhs_interval.min()) return false;
 
