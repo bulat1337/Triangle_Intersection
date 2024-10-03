@@ -12,7 +12,7 @@
 
 int main()
 {
-	LabeledTriangles triangles = get_triangles();
+	LabeledTriangles triangles = get_triangles(std::cin);
 
 	double cell_size = calc_cell_size(triangles);
 

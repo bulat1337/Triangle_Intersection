@@ -49,7 +49,7 @@ class Grid
 };
 
 
-[[nodiscard]] LabeledTriangles get_triangles();
+[[nodiscard]] LabeledTriangles get_triangles(std::istream& in);
 
 [[nodiscard]] double calc_cell_size(const LabeledTriangles& triangles);
 

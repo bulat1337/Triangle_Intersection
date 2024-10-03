@@ -162,10 +162,10 @@ LabeledTriangles close_triangles(	  const LabeledTriangle& triangle
 
 };
 
-[[nodiscard]] LabeledTriangles get_triangles()
+[[nodiscard]] LabeledTriangles get_triangles(std::istream& in)
 {
 	size_t triangle_amount = 0;
-	std::cin >> triangle_amount;
+	in >> triangle_amount;
 
 	LabeledTriangles triangles;
 	triangles.reserve(triangle_amount);
@@ -176,7 +176,7 @@ LabeledTriangles close_triangles(	  const LabeledTriangle& triangle
 		Point3 pnt_2;
 		Point3 pnt_3;
 
-		std::cin >> pnt_1 >> pnt_2 >> pnt_3;
+		in >> pnt_1 >> pnt_2 >> pnt_3;
 
 		Triangle3 triangle(pnt_1, pnt_2, pnt_3);
 

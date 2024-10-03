@@ -217,7 +217,7 @@ TEST(two_dimentional, not_contained_superdegen)
 	EXPECT_EQ(intersects3(triangle_1, triangle_2), false);
 }
 
-TEST(threeDimentional, basic_1)
+TEST(three_dimentional, basic_1)
 {
 	Point3 A1(1.0, 4.0, 1.0);
 	Point3 B1(-4.0, 2.0, 3.0);
@@ -234,7 +234,7 @@ TEST(threeDimentional, basic_1)
 	EXPECT_EQ(intersects3(triangle_1, triangle_2), true);
 }
 
-TEST(threeDimentional, basic_2)
+TEST(three_dimentional, basic_2)
 {
 	Point3 A1(1.0, -4.0, 1.0);
 	Point3 B1(-4.0, -2.0, 3.0);
@@ -251,7 +251,7 @@ TEST(threeDimentional, basic_2)
 	EXPECT_EQ(intersects3(triangle_1, triangle_2), true);
 }
 
-TEST(threeDimentional, basic_3)
+TEST(three_dimentional, basic_3)
 {
 	Point3 A1( 1.0, 4.0, 1.0);
 	Point3 B1(-4.0, 2.0, 3.0);
@@ -268,7 +268,7 @@ TEST(threeDimentional, basic_3)
 	EXPECT_EQ(intersects3(triangle_1, triangle_2), true);
 }
 
-TEST(threeDimentional, basic_4)
+TEST(three_dimentional, basic_4)
 {
 	Point3 A1(1.0, 4.0, 3.0);
 	Point3 B1(2.0, 2.0, 2.0);
@@ -287,7 +287,7 @@ TEST(threeDimentional, basic_4)
 
 // треугольник(1.0|4.0|3.0 2.0|2.0|2.0 -3.0|2.0|1.5)
 // треугольник(5.0|4.0|-2.5 8.0|2.0|4.0 3.5|2.5|3.5)
-TEST(threeDimentional, basic_5)
+TEST(three_dimentional, basic_5)
 {
 	Point3 A1(1.0, 4.0, 3.0);
 	Point3 B1(2.0, 2.0, 2.0);
@@ -306,7 +306,7 @@ TEST(threeDimentional, basic_5)
 
 //треугольник(2|0|0 1|1|0 4|1|0)
 //треугольник(3|1|0 4|4|4 2|4|4)
-TEST(threeDimentional, one_point_intersection)
+TEST(three_dimentional, one_point_intersection)
 {
 	Point3 A1(2.0, 0.0, 0.0);
 	Point3 B1(1.0, 1.0, 0.0);
@@ -325,7 +325,7 @@ TEST(threeDimentional, one_point_intersection)
 
 //треугольник(2|0|1 3|4|3 7|1|2)
 //треугольник(-1|-2|0 -3|-4|0 -4|-5|0)
-TEST(threeDimentional, degen_triangle_1)
+TEST(three_dimentional, degen_triangle_1)
 {
 	Point3 A1(2.0, 0.0, 1.0);
 	Point3 B1(3.0, 4.0, 3.0);
@@ -344,7 +344,7 @@ TEST(threeDimentional, degen_triangle_1)
 
 // треугольник(2|0|1 3|8|3 7|6|2)
 // треугольник(4|2|0 4|4|2 4|6|4)
-TEST(threeDimentional, degen_triangle_2)
+TEST(three_dimentional, degen_triangle_2)
 {
 	Point3 A1(2.0, 0.0, 1.0);
 	Point3 B1(3.0, 8.0, 3.0);
@@ -363,7 +363,7 @@ TEST(threeDimentional, degen_triangle_2)
 
 // треугольник(2|0|1 3|8|3 7|6|2)
 // треугольник(2|0|0 2|0|2 2|0|4)
-TEST(threeDimentional, degen_triangle_one_point_intersection)
+TEST(three_dimentional, degen_triangle_one_point_intersection)
 {
 	Point3 A1(2.0, 0.0, 1.0);
 	Point3 B1(3.0, 8.0, 3.0);
@@ -378,6 +378,26 @@ TEST(threeDimentional, degen_triangle_one_point_intersection)
 	Triangle3 triangle_2(A2, B2, C2);
 
 	EXPECT_EQ(intersects3(triangle_1, triangle_2), true);
+}
+
+TEST(common, basic_1)
+{
+	test_utils::run_test("/common/basic_1");
+}
+
+TEST(common, basic_2)
+{
+	test_utils::run_test("/common/basic_2");
+}
+
+TEST(common, basic_3)
+{
+	test_utils::run_test("/common/basic_3");
+}
+
+TEST(bd_tests, amount_100)
+{
+	test_utils::run_test("/bd_tests/amount-100");
 }
 
 #ifdef BD_TESTS
