@@ -99,7 +99,6 @@ struct Hash_ul_pair
 	size_t operator() (const std::pair<size_t, size_t>& ul_pair) const
 	{
 		// a >= b ? a * a + a + b : a + b * b;  where a, b >= 0
-
 		return 	  ul_pair.first >= ul_pair.second
 				? ul_pair.first * ul_pair.first + ul_pair.first + ul_pair.second
 				: ul_pair.first + ul_pair.second * ul_pair.second;
@@ -145,6 +144,7 @@ LabeledTriangles close_triangles(	  const LabeledTriangle& triangle
 														, triangle.second
 														, potential_triangle.second))
 						{
+
 							potential_collisions.push_back(potential_triangle);
 
 							add_checked_collision(	  added_potentials
@@ -229,12 +229,13 @@ void intersect_close_trinagles(	  std::set<size_t>& intersecting_ids
 			++intersection_check_counter;
 			#endif
 
+			LOG("checking intersection of {} and {}\n", triangle.second, potential.second);
+
 			if (intersects3(triangle.first, potential.first))
 			{
+				LOG("{} intersects {}\n", triangle.second, potential.second);
 				intersecting_ids.insert(triangle.second);
 				intersecting_ids.insert(potential.second);
-
-				break;
 			}
 		}
 	}

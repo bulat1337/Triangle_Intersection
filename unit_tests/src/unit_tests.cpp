@@ -380,6 +380,45 @@ TEST(three_dimentional, degen_triangle_one_point_intersection)
 	EXPECT_EQ(intersects3(triangle_1, triangle_2), true);
 }
 
+// треугольник(-2.4|-0.9|10.7 1.1|0.9|18.4 -11.4|-9.0|18.1)
+// треугольник(-10.0|0.6|17.6 -1.3|-5.8|13.9 -16.5|-9.4|19.7)
+TEST(three_dimentional, basic_6)
+{
+	Point3 A1(-2.4, -0.9, 10.7);
+	Point3 B1(1.1, 0.9, 18.4);
+	Point3 C1(-11.4, -9.0, 18.1);
+
+	Point3 A2(-10.0, 0.6, 17.6);
+	Point3 B2(-1.3, -5.8, 13.9);
+	Point3 C2(-16.5, -9.4, 19.7);
+
+	Triangle3 triangle_1(A1, B1, C1);
+
+	Triangle3 triangle_2(A2, B2, C2);
+
+	EXPECT_EQ(intersects3(triangle_1, triangle_2), true);
+}
+
+// треугольник(-2.4|-0.9|10.7 1.1|0.9|18.4 -11.4|-9.0|18.1)
+// треугольник(-10.0|0.6|17.6 -1.3|-5.8|13.9 -16.5|-9.4|19.7)
+TEST(three_dimentional, basic_7)
+{
+	Point3 A1(-2.4, -0.9, 10.7);
+	Point3 B1(1.1, 0.9, 18.4);
+	Point3 C1(-11.4, -9.0, 18.1);
+
+	Point3 A2(-10.0, 0.6, 17.6);
+	Point3 B2(-1.3, -5.8, 13.9);
+	Point3 C2(-16.5, -9.4, 19.7);
+
+	Triangle3 triangle_1(A2, B2, C2);
+
+	Triangle3 triangle_2(A1, B1, C1);
+
+
+	EXPECT_EQ(intersects3(triangle_1, triangle_2), true);
+}
+
 TEST(common, basic_1)
 {
 	test_utils::run_test("/common/basic_1");
@@ -395,13 +434,13 @@ TEST(common, basic_3)
 	test_utils::run_test("/common/basic_3");
 }
 
+
+#ifdef BD_TESTS
+
 TEST(bd_tests, amount_100)
 {
 	test_utils::run_test("/bd_tests/amount-100");
 }
-
-#ifdef BD_TESTS
-
 
 
 #endif
