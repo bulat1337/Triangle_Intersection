@@ -5,7 +5,7 @@
 
 int utils::cmp_double(double lhs, double rhs)
 {
-    if(isnan(lhs) && isnan(rhs))
+    if(std::isnan(lhs) && std::isnan(rhs))
     {
         return 0;
     }

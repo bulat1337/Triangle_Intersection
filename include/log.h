@@ -1,6 +1,8 @@
 #ifndef LOG_H
 #define LOG_H
 
+#if __has_include(<format>)
+
 #include <format>
 
 #ifdef ENABLE_LOGGING
@@ -25,6 +27,14 @@ do												\
 #define MSG(msg) do {} while (false)
 #define LOG(msg, ...) do {} while (false)
 
-#endif
+#endif // __cpp_lib_format
+#else
 
-#endif
+#define MSG(msg) do {} while (false)
+#define LOG(msg, ...) do {} while (false)
+
+#endif // __cpp_lib_format
+
+
+
+#endif // LOG_H
