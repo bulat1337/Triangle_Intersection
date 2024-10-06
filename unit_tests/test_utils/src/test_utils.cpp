@@ -1,16 +1,15 @@
 #include "test_utils.h"
 
-#include <gtest/gtest.h>
+#include <gtest/gtest.h>   // for Message, CmpHelperEQ, CmpHelperEQFailure
+#include <stddef.h>        // for size_t
+#include <format>          // for format
+#include <fstream>         // for basic_ifstream, ifstream
+#include <iterator>        // for istreambuf_iterator
+#include <set>             // for set, __tree_const_iterator
+#include <stdexcept>       // for runtime_error
+#include <string>          // for allocator, char_traits, basic_string, string
 
-#include <fstream>
-#include <format>
-#include <string>
-#include <iostream>
-#include <vector>
-#include <unordered_map>
-#include <ranges>
-
-#include "spatial_hash.h"
+#include "spatial_hash.h"  // for Grid, calc_cell_size, get_triangles, inter...
 
 namespace
 {

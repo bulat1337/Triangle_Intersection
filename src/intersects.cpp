@@ -1,12 +1,15 @@
 #include "intersects.h"
 
-#include "vec.h"
-#include "plane.h"
-#include "triangle.h"
-#include "distances.h"
-#include "segment.h"
-#include "interval.h"
-#include "utils.h"
+#include <stddef.h>     // for size_t
+
+#include "distances.h"  // for Distances
+#include "interval.h"   // for Interval
+#include "log.h"        // for MSG, LOG
+#include "plane.h"      // for Plane3
+#include "segment.h"    // for Segment2
+#include "triangle.h"   // for Triangle3, Triangle2, Triangle_Base
+#include "utils.h"      // for Axis, get_max_axis
+#include "vec.h"        // for Vec3, Point2, cross
 
 namespace
 {

@@ -1,7 +1,9 @@
 #include "utils.h"
-#include "vec.h"
 
-#include <cmath>
+#include <cmath>    // for isnan, fabs
+#include <cstdlib>  // for abs
+
+#include "vec.h"    // for Vec3
 
 int utils::cmp_double(double lhs, double rhs)
 {

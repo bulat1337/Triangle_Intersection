@@ -1,10 +1,8 @@
 #ifndef DISTANCES_H
 #define DISTANCES_H
 
-#include <cmath>
-#include "vec.h"
-#include "plane.h"
-#include "utils.h"
+#include "plane.h"  // for Plane3
+#include "vec.h"    // for dot, Point3
 
 class Triangle3;
 

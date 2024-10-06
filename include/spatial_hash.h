@@ -1,15 +1,17 @@
 #ifndef SPATIAL_HASH_H
 #define SPATIAL_HASH_H
 
-#include <unordered_map>
-#include <unordered_set>
-#include <set>
-#include <vector>
-#include <cmath>
+#include <stddef.h>       // for size_t
 
-#include "intersects.h"
-#include "bounding_box.h"
-#include "log.h"
+#include <functional>     // for hash
+#include <istream>        // for istream
+#include <set>            // for set
+#include <unordered_map>  // for unordered_map
+#include <utility>        // for pair
+#include <vector>         // for vector
+
+#include "triangle.h"     // for Triangle3
+#include "vec.h"          // for Point3
 
 
 using LabeledTriangle  = std::pair<Triangle3, size_t>;

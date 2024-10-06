@@ -1,9 +1,11 @@
 #ifndef TRIANGLE_H
 #define TRIANGLE_H
 
-#include <iostream>
-
-#include "vec.h"
+#include <stddef.h>   // for size_t
+#include <array>      // for array
+#include <iostream>   // for istream
+#include <stdexcept>  // for logic_error
+#include "vec.h"      // for Point3, Point2, operator>>
 
 class Distances;
 

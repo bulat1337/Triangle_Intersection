@@ -1,14 +1,14 @@
 #include "triangle.h"
 
-#include <cmath>
+#include <algorithm>    // for sort
+#include <array>        // for array
+#include <cmath>        // for atan2
+#include <utility>      // for swap
 
-#include <array>
-#include <algorithm>
-
-#include "vec.h"
-#include "utils.h"
-#include "distances.h"
-#include "log.h"
+#include "distances.h"  // for Distances
+#include "log.h"        // for MSG, LOG
+#include "utils.h"      // for sign, cmp_double, Axis, get_max_axis
+#include "vec.h"        // for Point3, Vec3, operator-, Vec2, dot, operator+
 
 void Triangle3::sort_vertices(std::array<Point3, 3>& points)
 {

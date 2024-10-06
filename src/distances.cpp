@@ -1,6 +1,9 @@
 #include "distances.h"
 
-#include "triangle.h"
+#include <cmath>       // for fabs
+
+#include "triangle.h"  // for Triangle3
+#include "utils.h"     // for fp_tolerance
 
 Distances::Distances(const Triangle3& triangle, const Plane3& plane)
 	: first_(calc_dist(triangle.pnt_1(), plane)),

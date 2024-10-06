@@ -1,14 +1,15 @@
 #include "spatial_hash.h"
 
-#include <unordered_map>
-#include <unordered_set>
-#include <set>
-#include <vector>
-#include <cmath>
+#include <algorithm>       // for max, min
+#include <cmath>           // for floor
+#include <set>             // for set
+#include <unordered_map>   // for unordered_map, operator==, __hash_map_cons...
+#include <unordered_set>   // for unordered_set
+#include <vector>          // for vector
 
-#include "intersects.h"
-#include "bounding_box.h"
-#include "log.h"
+#include "bounding_box.h"  // for Bounding_box
+#include "intersects.h"    // for intersects3
+#include "log.h"           // for LOG, MSG
 
 namespace
 {

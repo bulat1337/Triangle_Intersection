@@ -1,11 +1,9 @@
-#include <fstream>
-#include <format>
-#include <string>
-
-#include <gtest/gtest.h>
-
-#include "intersects.h"
-#include "test_utils.h"
+#include <gtest/gtest.h>  // for Test, TestInfo (ptr only), Message, TEST
+#include <string>         // for basic_string
+#include "intersects.h"   // for intersects3
+#include "test_utils.h"   // for run_test
+#include "triangle.h"     // for Triangle3
+#include "vec.h"          // for Point3
 
 TEST(two_dimentional, basic_1)
 {

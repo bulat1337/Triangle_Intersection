@@ -1,13 +1,8 @@
-#include <unordered_map>
-#include <unordered_set>
-#include <set>
-#include <vector>
-#include <cmath>
+#include <stddef.h>        // for size_t
+#include <iostream>        // for basic_ostream, operator<<, cin, cout
+#include <set>             // for set, __tree_const_iterator
 
-#include "intersects.h"
-#include "bounding_box.h"
-#include "log.h"
-#include "spatial_hash.h"
+#include "spatial_hash.h"  // for Grid, calc_cell_size, get_triangles, inter...
 
 
 int main()
