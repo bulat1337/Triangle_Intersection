@@ -2,11 +2,9 @@
 
 #include <gtest/gtest.h>   // for Message, CmpHelperEQ, CmpHelperEQFailure
 #include <stddef.h>        // for size_t
-#include <format>          // for format
 #include <fstream>         // for basic_ifstream, ifstream
 #include <iterator>        // for istreambuf_iterator
 #include <set>             // for set, __tree_const_iterator
-#include <stdexcept>       // for runtime_error
 #include <string>          // for allocator, char_traits, basic_string, string
 
 #include "spatial_hash.h"  // for Grid, calc_cell_size, get_triangles, inter...
@@ -14,13 +12,13 @@
 namespace
 {
 
-
 std::string get_result(const std::string& file_name)
 {
-	std::ifstream test_data(file_name);
+	std::ifstream test_data;
 
-	if(!test_data.is_open())
-		throw std::runtime_error(std::format("Can't open {}\n", file_name));
+	test_data.exceptions(std::ifstream::badbit);
+
+	test_data.open(file_name);
 
 	LabeledTriangles triangles = get_triangles(test_data);
 
@@ -46,10 +44,11 @@ std::string get_result(const std::string& file_name)
 
 std::string get_answer(const std::string& file_name)
 {
-	std::ifstream answer_file(file_name);
+	std::ifstream answer_file;
 
-	if(!answer_file.is_open())
-		throw std::runtime_error(std::format("Can't open {}\n", file_name));
+	answer_file.exceptions(std::ifstream::badbit);
+
+	answer_file.open(file_name);
 
 	std::string answer(	(std::istreambuf_iterator<char>(answer_file)),
 						std::istreambuf_iterator<char>());

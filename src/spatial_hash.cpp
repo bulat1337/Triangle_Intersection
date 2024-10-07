@@ -202,7 +202,7 @@ LabeledTriangles close_triangles(	  const LabeledTriangle& triangle
 		all_sides_length += side_3.length();
 	}
 
-	double cell_size = cell_size_coeff * (all_sides_length / triangles.size());
+	double cell_size = cell_size_coeff * (all_sides_length / (triangles.size() * 3));
 	LOG("Calculated cell size: {}\n", cell_size);
 
 	return cell_size;
@@ -230,14 +230,14 @@ void intersect_close_trinagles(	  std::set<size_t>& intersecting_ids
 			++intersection_check_counter;
 			#endif
 
-			LOG("checking intersection of {} and {}\n", triangle.second, potential.second);
-
+			LOG("Checking the intersecton of {} and {}\n", triangle.second, potential.second);
 			if (intersects3(triangle.first, potential.first))
 			{
-				LOG("{} intersects {}\n", triangle.second, potential.second);
+				LOG("YES: {} intersects {}\n\n", triangle.second, potential.second);
 				intersecting_ids.insert(triangle.second);
 				intersecting_ids.insert(potential.second);
 			}
+			else MSG("NO\n\n");
 		}
 	}
 

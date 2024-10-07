@@ -23,15 +23,14 @@ class Segment2
 
 		double proj_on_norm = dot(ab, ap.clockwise_normal());
 
-		if (utils::cmp_double(std::abs(proj_on_norm), 0) > 0)
+		if (utils::cmp_double(std::abs(proj_on_norm), 0) != 0)
 		{
 			return false;
 		}
 
 		double dot_product = dot(ap, ab);
-		double squared_length_ab = dot(ab, ab);
 
-		return dot_product >= 0 && dot_product <= squared_length_ab;
+		return dot_product >= 0 && dot_product <= ab.sq_length();
 	}
 
 
@@ -64,13 +63,24 @@ class Segment2
 		double oo_proj_1 = dot(orig_to_orig, direc_1.clockwise_normal());
 		double oo_proj_2 = dot(orig_to_orig, direc_2.clockwise_normal());
 
-		if (is_point(direc_1))
+		bool first_is_point = is_point(direc_1);
+		bool second_is_point = is_point(direc_2);
+
+		if (first_is_point && second_is_point)
 		{
+			MSG("They are both points\n");
+			return orig_to_orig.near_zero();
+		}
+
+		if (first_is_point)
+		{
+			MSG("First one is point\n");
 			return point_on_segment(pnt_1_, other);
 		}
 
-		if (is_point(direc_2))
+		if (second_is_point)
 		{
+			MSG("Second one is point\n");
 			return point_on_segment(other.pnt_1(), *this);
 		}
 

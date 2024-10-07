@@ -417,6 +417,26 @@ TEST(three_dimentional, basic_7)
 	EXPECT_EQ(intersects3(triangle_1, triangle_2), true);
 }
 
+// треугольник(9|9|9 9|9|9 9|9|9)
+// треугольник(8|8|8 8|8|8 -10|8|8)
+TEST(three_dimentional, degen_and_superdegen)
+{
+	Point3 A1(9.0, 9.0, 9.0);
+	Point3 B1(9.0, 9.0, 9.0);
+	Point3 C1(9.0, 9.0, 9.0);
+
+	Point3 A2(8.0, 8.0, 8.0);
+	Point3 B2(8.0, 8.0, 8.0);
+	Point3 C2(-10.0, 8.0, 8.0);
+
+	Triangle3 triangle_1(A2, B2, C2);
+
+	Triangle3 triangle_2(A1, B1, C1);
+
+
+	EXPECT_EQ(intersects3(triangle_1, triangle_2), false);
+}
+
 TEST(common, basic_1)
 {
 	test_utils::run_test("/common/basic_1");
