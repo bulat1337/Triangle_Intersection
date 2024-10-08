@@ -3,6 +3,6 @@
 
 class Triangle3;
 
-bool intersects3(Triangle3 lhs, Triangle3 rhs);
+bool intersects3(const Triangle3& lhs, const Triangle3& rhs);
 
 #endif // INTERSECTION_H

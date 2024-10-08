@@ -68,139 +68,84 @@ namespace
 
 		return false;
 	}
+
+	Interval compute_interval(	  Triangle3 triangle
+								, Distances& triangle_dists
+								, const utils::Axis& max_axis)
+	{
+		triangle.distance_sort(triangle_dists);
+
+		double min = 0.0;
+		double max = 0.0;
+
+		auto get_coord = [max_axis](const Point3& pnt)
+		{
+			switch (max_axis)
+			{
+				case utils::Axis::x: return pnt.x();
+				case utils::Axis::y: return pnt.y();
+				case utils::Axis::z: return pnt.z();
+			}
+		};
+
+		double sim_coeff =	  triangle_dists.first()
+							/ (triangle_dists.first() - triangle_dists.second());
+
+		min       =   get_coord(triangle.pnt_1())
+					+ (get_coord(triangle.pnt_2()) - get_coord(triangle.pnt_1())) * sim_coeff;
+
+		sim_coeff =   triangle_dists.third()
+					/ (triangle_dists.third() - triangle_dists.second());
+
+		max 	  =   get_coord(triangle.pnt_3())
+					+ (get_coord(triangle.pnt_2()) - get_coord(triangle.pnt_3())) * sim_coeff;
+
+
+		return Interval(min, max);
+	}
 }
 
-bool intersects3(Triangle3 lhs, Triangle3 rhs)
+bool intersects3(const Triangle3& lhs, const Triangle3& rhs)
 {
-	//	1. Compute plane equation of rhs triangle (pi_2).
-
 	Plane3 rhs_plane(rhs);
-	LOG( "rhs_plane normal: ({}, {}, {})\n"
-		, rhs_plane.normal().x()
-		, rhs_plane.normal().y()
-		, rhs_plane.normal().z());
 
 	Distances lhs_dists(lhs, rhs_plane);
 
-	LOG("lhs distances: {} {} {}\n", lhs_dists.first(), lhs_dists.second(), lhs_dists.third());
-
-	// 2. Reject as trivial if all points of lhs triangle are on same side.
 	if(lhs_dists.same_sign())
 	{
 		MSG("All points of lhs triangle are on same side\n");
 		return false;
 	}
 
-	// 3. Compute plane equation of lhs triangle (pi_1).
 	Plane3 lhs_plane(lhs);
-	LOG( "lhs_plane normal: ({}, {}, {})\n"
-		, lhs_plane.normal().x()
-		, lhs_plane.normal().y()
-		, lhs_plane.normal().z());
 
 	Distances rhs_dists(rhs, lhs_plane);
 
-	LOG("rhs distances: {} {} {}\n", rhs_dists.first(), rhs_dists.second(), rhs_dists.third());
-
-	// 4. Reject as trivial if all points of rhs triangle are on same side.
 	if(rhs_dists.same_sign())
 	{
-		MSG("All points of lhs triangle are on same side\n");
+		MSG("All points of rhs triangle are on same side\n");
 		return false;
 	}
 
-	// 5. If triangles are co-planar solve 2D task
-
 	if(lhs_dists.are_trivial() || rhs_dists.are_trivial())
 	{
-		#ifdef ENABLE_LOGGING
 		MSG("It's 2D case.\n");
-		#endif
 
 		utils::Axis max_normal_axis = utils::get_max_axis(lhs_plane.normal());
 
-		LOG( "Plane normal: ({}, {}, {})\n"
-			, lhs_plane.normal().x()
-			, lhs_plane.normal().y()
-			, lhs_plane.normal().z());
-
 		return intersects2(project(lhs, max_normal_axis), project(rhs, max_normal_axis));
 	}
-
-	// 6. Compute intersection line and project onto largest axis.
-	// 7. Compute the intervals for each triangle.
 
 	Vec3 intersection_line = cross(lhs_plane.normal(), rhs_plane.normal());
 
 	utils::Axis max_axis = utils::get_max_axis(intersection_line);
 
-	double lhs_min = 0.0;
-	double lhs_max = 0.0;
-	double rhs_min = 0.0;
-	double rhs_max = 0.0;
-
-
-	lhs.distance_sort(lhs_dists);
-	rhs.distance_sort(rhs_dists);
-
-	switch(max_axis)
-	{
-		case utils::Axis::x:
-		{
-			MSG("Projecting points on x\n");
-			double sim_coeff = lhs_dists.first() / (lhs_dists.first() - lhs_dists.second());
-			lhs_min = lhs.pnt_1().x() + (lhs.pnt_2().x() - lhs.pnt_1().x()) * sim_coeff;
-
-			sim_coeff = lhs_dists.third() / (lhs_dists.third() - lhs_dists.second());
-			lhs_max = lhs.pnt_3().x() + (lhs.pnt_2().x() - lhs.pnt_3().x()) * sim_coeff;
-
-			sim_coeff = rhs_dists.first() / (rhs_dists.first() - rhs_dists.second());;
-			rhs_min = rhs.pnt_1().x() + (rhs.pnt_2().x() - rhs.pnt_1().x()) * sim_coeff;
-
-			sim_coeff = rhs_dists.third() / (rhs_dists.third() - rhs_dists.second());
-			rhs_max = rhs.pnt_3().x() + (rhs.pnt_2().x() - rhs.pnt_3().x()) * sim_coeff;
-			break;
-		}
-		case utils::Axis::y:
-		{
-			MSG("Projecting points on y\n");
-			double sim_coeff = lhs_dists.first() / (lhs_dists.first() - lhs_dists.second());
-			lhs_min = lhs.pnt_1().y() + (lhs.pnt_2().y() - lhs.pnt_1().y()) * sim_coeff;
-
-			sim_coeff = lhs_dists.third() / (lhs_dists.third() - lhs_dists.second());
-			lhs_max = lhs.pnt_3().y() + (lhs.pnt_2().y() - lhs.pnt_3().y()) * sim_coeff;
-
-			sim_coeff = rhs_dists.first() / (rhs_dists.first() - rhs_dists.second());
-			rhs_min = rhs.pnt_1().y() + (rhs.pnt_2().y() - rhs.pnt_1().y()) * sim_coeff;
-
-			sim_coeff = rhs_dists.third() / (rhs_dists.third() - rhs_dists.second());
-			rhs_max = rhs.pnt_3().y() + (rhs.pnt_2().y() - rhs.pnt_3().y()) * sim_coeff;
-			break;
-		}
-		case utils::Axis::z:
-		{
-			MSG("Projecting points on z\n");
-			double sim_coeff = lhs_dists.first() / (lhs_dists.first() - lhs_dists.second());
-			lhs_min = lhs.pnt_1().z() + (lhs.pnt_2().z() - lhs.pnt_1().z()) * sim_coeff;
-
-			sim_coeff = lhs_dists.third() / (lhs_dists.third() - lhs_dists.second());
-			lhs_max = lhs.pnt_3().z() + (lhs.pnt_2().z() - lhs.pnt_3().z()) * sim_coeff;
-
-			sim_coeff = rhs_dists.first() / (rhs_dists.first() - rhs_dists.second());
-			rhs_min = rhs.pnt_1().z() + (rhs.pnt_2().z() - rhs.pnt_1().z()) * sim_coeff;
-
-			sim_coeff = rhs_dists.third() / (rhs_dists.third() - rhs_dists.second());
-			rhs_max = rhs.pnt_3().z() + (rhs.pnt_2().z() - rhs.pnt_3().z()) * sim_coeff;
-			break;
-		}
-	}
-	Interval lhs_interval(lhs_min, lhs_max);
-	Interval rhs_interval(rhs_min, rhs_max);
-
-	// 8. Intersect the intervals.
+	Interval lhs_interval = compute_interval(lhs, lhs_dists, max_axis);
+	Interval rhs_interval = compute_interval(rhs, rhs_dists, max_axis);
 
 	LOG("lhs interval: [{} , {}]\n", lhs_interval.min(), lhs_interval.max());
 	LOG("rhs interval: [{} , {}]\n", rhs_interval.min(), rhs_interval.max());
+	
 	if (lhs_interval.max() < rhs_interval.min()) return false;
 	if (rhs_interval.max() < lhs_interval.min()) return false;
 
