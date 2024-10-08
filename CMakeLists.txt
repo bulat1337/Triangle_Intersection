@@ -99,7 +99,9 @@ add_library(intersects STATIC
 	src/distances.cpp
 	src/plane.cpp
 	src/triangle.cpp
-	src/spatial_hash.cpp)
+	src/multi_inter.cpp
+	src/bounding_box.cpp
+	src/segment.cpp)
 
 target_include_directories(intersects PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/include)

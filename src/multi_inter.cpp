@@ -1,4 +1,4 @@
-#include "spatial_hash.h"
+#include "multi_inter.h"
 
 #include <algorithm>       // for max, min
 #include <cmath>           // for floor
@@ -18,19 +18,15 @@ Point3 discretize(const Point3& point, double cell_size)
 {
 	return Point3
 	(
-		std::floor(point.x() / cell_size),
-		std::floor(point.y() / cell_size),
-		std::floor(point.z() / cell_size)
+		  std::floor(point.x() / cell_size)
+		, std::floor(point.y() / cell_size)
+		, std::floor(point.z() / cell_size)
 	);
 }
 
 };
 
-
-Grid::Grid(double cell_size) :
-	cell_size_(cell_size) {}
-
-void Grid::insert_all(LabeledTriangles& triangles)
+void multi_inter::Grid::insert_all(LabeledTriangles& triangles)
 {
 	for (auto& triangle : triangles)
 	{
@@ -38,7 +34,7 @@ void Grid::insert_all(LabeledTriangles& triangles)
 	}
 }
 
-void Grid::insert(LabeledTriangle& trgl)
+void multi_inter::Grid::insert(LabeledTriangle& trgl)
 {
 	Bounding_box bounding_box(trgl.first);
 
@@ -64,22 +60,7 @@ void Grid::insert(LabeledTriangle& trgl)
 	}
 }
 
-auto Grid::find(const Point3& pnt) const
-{
-	return cells_.find(pnt);
-}
-
-auto Grid::end() const
-{
-	return cells_.end();
-}
-
-auto Grid::at(const Point3& pnt) const
-{
-	return cells_.at(pnt);
-}
-
-void Grid::dump_cells() const
+void multi_inter::Grid::dump_cells() const
 {
 	for ([[maybe_unused]]const auto& elem : cells_)
 	{
@@ -99,14 +80,13 @@ struct Hash_ul_pair
 {
 	size_t operator() (const std::pair<size_t, size_t>& ul_pair) const
 	{
-		// a >= b ? a * a + a + b : a + b * b;  where a, b >= 0
 		return 	  ul_pair.first >= ul_pair.second
 				? ul_pair.first * ul_pair.first + ul_pair.first + ul_pair.second
 				: ul_pair.first + ul_pair.second * ul_pair.second;
 	}
 };
 
-using CollisionSet     = std::unordered_set<std::pair<size_t, size_t>, Hash_ul_pair>;
+using CollisionSet = std::unordered_set<std::pair<size_t, size_t>, Hash_ul_pair>;
 
 void add_checked_collision(CollisionSet& added_potentials, size_t a, size_t b)
 {
@@ -118,11 +98,11 @@ bool added_potentials_contains(const CollisionSet& added_potentials, size_t a, s
 	return added_potentials.contains({std::min(a, b) , std::max(a, b)});
 }
 
-LabeledTriangles close_triangles(	  const LabeledTriangle& triangle
-									, const Grid& grid
-									, CollisionSet& added_potentials)
+multi_inter::LabeledTriangles close_triangles(	  const multi_inter::LabeledTriangle& triangle
+												, const multi_inter::Grid& grid
+												, CollisionSet& added_potentials)
 {
-	LabeledTriangles potential_collisions;
+	multi_inter::LabeledTriangles potential_collisions;
 	add_checked_collision(added_potentials, triangle.second, triangle.second);
 
 	#ifdef ENABLE_LOGGING
@@ -163,7 +143,7 @@ LabeledTriangles close_triangles(	  const LabeledTriangle& triangle
 
 };
 
-[[nodiscard]] LabeledTriangles get_triangles(std::istream& in)
+[[nodiscard]] multi_inter::LabeledTriangles multi_inter::get_triangles(std::istream& in)
 {
 	size_t triangle_amount = 0;
 	in >> triangle_amount;
@@ -187,7 +167,7 @@ LabeledTriangles close_triangles(	  const LabeledTriangle& triangle
 	return triangles;
 }
 
-[[nodiscard]] double calc_cell_size(const LabeledTriangles& triangles)
+[[nodiscard]] double multi_inter::calc_cell_size(const multi_inter::LabeledTriangles& triangles)
 {
 	double all_sides_length = 0;
 
@@ -208,9 +188,9 @@ LabeledTriangles close_triangles(	  const LabeledTriangle& triangle
 	return cell_size;
 }
 
-void intersect_close_trinagles(	  std::set<size_t>& intersecting_ids
-								, const LabeledTriangles& triangles
-								, const Grid& grid)
+void multi_inter::intersect_close_trinagles(  std::set<size_t>& intersecting_ids
+											, const multi_inter::LabeledTriangles& triangles
+											, const Grid& grid)
 {
 	#ifdef DEBUG
 	size_t intersection_check_counter = 0;

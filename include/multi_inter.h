@@ -13,6 +13,9 @@
 #include "triangle.h"     // for Triangle3
 #include "vec.h"          // for Point3
 
+namespace multi_inter
+{
+
 
 using LabeledTriangle  = std::pair<Triangle3, size_t>;
 using LabeledTriangles = std::vector<LabeledTriangle>;
@@ -35,17 +38,18 @@ class Grid
 	double cell_size_ = 0.0;
 
   public:
-	Grid(double cell_size);
+	Grid(double cell_size) :
+		cell_size_(cell_size) {}
 
 	void insert_all(LabeledTriangles& triangles);
 
 	void insert(LabeledTriangle& trgl);
 
-	auto find(const Point3& pnt) const;
+	auto find(const Point3& pnt) const { return cells_.find(pnt); }
 
-	auto end() const;
+	auto end() const { return cells_.end(); }
 
-	auto at(const Point3& pnt) const;
+	auto at(const Point3& pnt) const { return cells_.at(pnt); }
 
 	void dump_cells() const;
 };
@@ -58,5 +62,7 @@ class Grid
 void intersect_close_trinagles(	  std::set<size_t>& intersecting_ids
 								, const LabeledTriangles& triangles
 								, const Grid& grid);
+
+};
 
 #endif

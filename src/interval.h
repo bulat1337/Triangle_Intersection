@@ -13,25 +13,13 @@ class Interval
 	Interval(double min, double max):
 		min_(std::min(min, max)), max_(std::max(min, max)) {}
 
-	double min() const
-	{
-		return min_;
-	}
+	double min() const { return min_; }
 
-	double max() const
-	{
-		return max_;
-	}
+	double max() const { return max_; }
 
-	double& min()
-	{
-		return min_;
-	}
+	double& min(){ return min_; }
 
-	double& max()
-	{
-		return max_;
-	}
+	double& max(){ return max_; }
 };
 
 #endif

@@ -63,9 +63,9 @@ void Triangle3::sort_vertices(std::array<Point3, 3>& points)
 	}
 }
 
-Triangle3::Triangle3(	const Point3& pnt_1
-			, const Point3& pnt_2
-			, const Point3& pnt_3)
+Triangle3::Triangle3(	  const Point3& pnt_1
+						, const Point3& pnt_2
+						, const Point3& pnt_3)
 {
 	std::array<Point3, 3> points = {pnt_1, pnt_2, pnt_3};
 
@@ -78,7 +78,7 @@ Triangle3::Triangle3(	const Point3& pnt_1
 
 void Triangle3::distance_sort(Distances& dists)
 {
-	if    (utils::sign(dists.second()) != utils::sign(dists.first())
+	if (   utils::sign(dists.second()) != utils::sign(dists.first())
 		&& utils::sign(dists.second()) != utils::sign(dists.third()))
 	{
 		MSG("Already sorted\n");
