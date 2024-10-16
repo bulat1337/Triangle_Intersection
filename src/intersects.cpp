@@ -92,15 +92,15 @@ Interval compute_interval(	  Triangle3 triangle
 		}
 	};
 
-	double sim_coeff =	  triangle_dists.first()
-						/ (triangle_dists.first() - triangle_dists.second());
+	double sim_coeff =	  triangle_dists.first
+						/ (triangle_dists.first - triangle_dists.second);
 
 	min = 	  get_coord(triangle.pnt_1())
 			+ (get_coord(triangle.pnt_2()) - get_coord(triangle.pnt_1()))
 			* sim_coeff;
 
-	sim_coeff =   triangle_dists.third()
-				/ (triangle_dists.third() - triangle_dists.second());
+	sim_coeff =   triangle_dists.third
+				/ (triangle_dists.third - triangle_dists.second);
 
 	max =	  get_coord(triangle.pnt_3())
 			+ (get_coord(triangle.pnt_2()) - get_coord(triangle.pnt_3()))

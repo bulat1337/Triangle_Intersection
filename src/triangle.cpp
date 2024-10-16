@@ -78,25 +78,25 @@ Triangle3::Triangle3(	  const Point3& pnt_1
 
 void Triangle3::distance_sort(Distances& dists)
 {
-	if (   utils::sign(dists.second()) != utils::sign(dists.first())
-		&& utils::sign(dists.second()) != utils::sign(dists.third()))
+	if (   utils::sign(dists.second) != utils::sign(dists.first)
+		&& utils::sign(dists.second) != utils::sign(dists.third))
 	{
 		MSG("Already sorted\n");
 		return;
 	}
 
-	if (utils::sign(dists.second()) == utils::sign(dists.first()))
+	if (utils::sign(dists.second) == utils::sign(dists.first))
 	{
-		std::swap(dists.first(), dists.second());
-		std::swap(dists.second(), dists.third());
+		std::swap(dists.first, dists.second);
+		std::swap(dists.second, dists.third);
 
 		std::swap(pnt_1_, pnt_2_);
 		std::swap(pnt_2_, pnt_3_);
 	}
 	else
 	{
-		std::swap(dists.second(), dists.third());
-		std::swap(dists.first(), dists.second());
+		std::swap(dists.second, dists.third);
+		std::swap(dists.first, dists.second);
 
 		std::swap(pnt_2_, pnt_3_);
 		std::swap(pnt_1_, pnt_2_);

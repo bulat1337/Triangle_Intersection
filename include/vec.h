@@ -19,17 +19,17 @@ class Vec3
 
 	Vec3(const Vec3& other) = default;
 
-	const double &x() const;
+	double x() const { return x_; }
 
-	const double &y() const;
+	double y() const { return y_; }
 
-	const double &z() const;
+	double z() const { return z_; }
 
-	double &x() ;
+	void set_x(double value) { x_ = value; }
 
-	double &y() ;
+	void set_y(double value) { y_ = value; }
 
-	double &z() ;
+	void set_z(double value) { z_ = value; }
 
 	Vec3& operator =(const Vec3& other);
 
@@ -78,13 +78,14 @@ class Vec2
 
 	Vec2(double x, double y);
 
-	const double &x() const;
+	double x() const { return x_; }
 
-	const double &y() const;
+	double y() const { return y_; }
 
-	double &x() ;
+	void set_x(double value) { x_ = value; }
 
-	double &y() ;
+	void set_y(double value) { y_ = value; }
+
 	Vec2 &operator +=(const Vec2 &other);
 
 	Vec2 &operator *=(double scalar);

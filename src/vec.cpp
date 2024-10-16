@@ -15,36 +15,6 @@ Vec3::Vec3(): x_(0.0), y_(0.0), z_(0.0) {}
 Vec3::Vec3(double x, double y, double z):
 	x_(x), y_(y), z_(z) {}
 
-const double &Vec3::x() const
-{
-	return x_;
-}
-
-const double &Vec3::y() const
-{
-	return y_;
-}
-
-const double &Vec3::z() const
-{
-	return z_;
-}
-
-double &Vec3::x()
-{
-	return x_;
-}
-
-double &Vec3::y()
-{
-	return y_;
-}
-
-double &Vec3::z()
-{
-	return z_;
-}
-
 Vec3& Vec3::operator =(const Vec3& other)
 {
 	x_ = other.x_;
@@ -168,18 +138,18 @@ Vec3 cross(const Vec3& lhs, const Vec3& rhs)
 				lhs.x() * rhs.y() - lhs.y() * rhs.x());
 }
 
-std::istream& operator >> (std::istream& is, Vec3& vec)
+std::istream& operator >> (std::istream& in, Vec3& vec)
 {
     double x, y, z;
 
-    if (is >> x >> y >> z)
+    if (in >> x >> y >> z)
     {
-        vec.x() = x;
-        vec.y() = y;
-        vec.z() = z;
+        vec.set_x(x);
+        vec.set_y(y);
+        vec.set_z(z);
     }
 
-    return is;
+    return in;
 }
 
 
@@ -189,26 +159,6 @@ Vec2::Vec2(): x_(0.0), y_(0.0) {}
 
 Vec2::Vec2(double x, double y):
 	x_(x), y_(y) {}
-
-const double &Vec2::x() const
-{
-	return x_;
-}
-
-const double &Vec2::y() const
-{
-	return y_;
-}
-
-double &Vec2::x()
-{
-	return x_;
-}
-
-double &Vec2::y()
-{
-	return y_;
-}
 
 Vec2 &Vec2::operator += (const Vec2 &other)
 {

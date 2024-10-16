@@ -33,9 +33,9 @@ class Triangle_Base
 	const Point& pnt_2() const { return pnt_2_; }
 	const Point& pnt_3() const { return pnt_3_; }
 
-  	Point& pnt_1() { return pnt_1_; }
-	Point& pnt_2() { return pnt_2_; }
-	Point& pnt_3() { return pnt_3_; }
+  	void set_pnt_1(double value) { pnt_1_ = value; }
+	void set_pnt_2(double value) { pnt_2_ = value; }
+	void set_pnt_3(double value) { pnt_3_ = value; }
 
 	const Point& operator [] (size_t pnt_id) const
 	{

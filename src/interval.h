@@ -17,9 +17,9 @@ class Interval
 
 	double max() const { return max_; }
 
-	double& min(){ return min_; }
+	void set_min(double value){ min_ = value; }
 
-	double& max(){ return max_; }
+	void set_max(double value){ max_ = value; }
 };
 
 #endif
