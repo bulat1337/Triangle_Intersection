@@ -16,6 +16,21 @@
 namespace multi_inter
 {
 
+struct Cell
+{
+	long long x;
+	long long y;
+	long long z;
+
+	Cell(long long x, long long y, long long z):
+		x(x), y(y), z(z) {}
+
+	bool operator == (const Cell& other) const
+	{
+		return x == other.x && y == other.y && z == other.z;
+	}
+};
+
 enum class status_t
 {
 	  all_good
@@ -26,20 +41,20 @@ enum class status_t
 using LabeledTriangle  = std::pair<Triangle3, size_t>;
 using LabeledTriangles = std::vector<LabeledTriangle>;
 
-struct Hash_point3
+struct Hash_Cell
 {
-	size_t operator() (const Point3& key) const
+	size_t operator() (const Cell& key) const
 	{
-		return 	  std::hash<int>()(static_cast<int>(key.x() * 73856093))
-				^ std::hash<int>()(static_cast<int>(key.y() * 19349663))
-				^ std::hash<int>()(static_cast<int>(key.z() * 83492791));
+		return 	  std::hash<long long>()(key.x * 73856093)
+				^ std::hash<long long>()(key.y * 19349663)
+				^ std::hash<long long>()(key.z * 83492791);
 	}
 };
 
 class Grid
 {
   private:
-	std::unordered_map<Point3, std::vector<std::pair<Triangle3, size_t>>, Hash_point3> cells_;
+	std::unordered_map<Cell, std::vector<std::pair<Triangle3, size_t>>, Hash_Cell> cells_;
 
 	double cell_size_ = 0.0;
 
@@ -51,11 +66,11 @@ class Grid
 
 	void insert(LabeledTriangle& trgl);
 
-	auto find(const Point3& pnt) const { return cells_.find(pnt); }
+	auto find(const Cell& pnt) const { return cells_.find(pnt); }
 
 	auto end() const { return cells_.end(); }
 
-	auto at(const Point3& pnt) const { return cells_.at(pnt); }
+	auto at(const Cell& pnt) const { return cells_.at(pnt); }
 
 	void dump_cells() const;
 };

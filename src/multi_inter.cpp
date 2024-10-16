@@ -58,7 +58,7 @@ void multi_inter::Grid::insert(LabeledTriangle& trgl)
 			for (double z = trgl.first.min_cell().z(); z <= trgl.first.max_cell().z(); ++z)
 			{
 				LOG("({}, {}, {})\n", x, y, z);
-				Point3 cell_key(x, y, z);
+				Cell cell_key(x, y, z);
 				cells_[cell_key].push_back(trgl);
 			}
 		}
@@ -120,7 +120,7 @@ multi_inter::LabeledTriangles close_triangles(	  const multi_inter::LabeledTrian
 		{
 			for (double z = triangle.first.min_cell().z(); z <= triangle.first.max_cell().z(); ++z)
 			{
-				Point3 cell_key(x, y, z);
+				multi_inter::Cell cell_key(x, y, z);
 
 				if (grid.find(cell_key) != grid.end())
 				{
