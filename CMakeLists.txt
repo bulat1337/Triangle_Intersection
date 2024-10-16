@@ -10,7 +10,6 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 option(ENABLE_LOGGING "Enable logging" OFF)
-option(DEBUG "Debug version" OFF)
 option(ENABLE_BIG_TESTS "Enables big data tests" OFF)
 
 set(RELEASE_COMPILE_OPTIONS
@@ -103,7 +102,7 @@ if(ENABLE_LOGGING)
 	target_compile_definitions(intersects PRIVATE ENABLE_LOGGING)
 endif()
 
-if(DEBUG)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 	target_compile_options(intersects PRIVATE ${DEBUG_COMPILE_OPTIONS})
 	target_compile_definitions(intersects PRIVATE DEBUG)
 
@@ -125,7 +124,7 @@ if(ENABLE_LOGGING)
 	target_compile_definitions(intersect.x PRIVATE ENABLE_LOGGING)
 endif()
 
-if(DEBUG)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 	target_compile_definitions(intersect.x PRIVATE DEBUG)
 	target_compile_options(intersect.x PRIVATE ${DEBUG_COMPILE_OPTIONS})
 

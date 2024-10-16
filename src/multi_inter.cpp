@@ -18,13 +18,13 @@
 namespace
 {
 
-Point3 discretize(const Point3& point, double cell_size)
+Cell discretize(const Point3& point, double cell_size)
 {
-	return Point3
+	return Cell
 	(
-		  std::floor(point.x() / cell_size)
-		, std::floor(point.y() / cell_size)
-		, std::floor(point.z() / cell_size)
+		  static_cast<long long>(std::floor(point.x() / cell_size))
+		, static_cast<long long>(std::floor(point.y() / cell_size))
+		, static_cast<long long>(std::floor(point.z() / cell_size))
 	);
 }
 
@@ -47,15 +47,15 @@ void multi_inter::Grid::insert(LabeledTriangle& trgl)
 		, bounding_box.min().x(), bounding_box.min().y(), bounding_box.min().z()
 		, bounding_box.max().x(), bounding_box.max().y(), bounding_box.max().z());
 
-	trgl.first.min_cell() = discretize(bounding_box.min(), cell_size_);
-	trgl.first.max_cell() = discretize(bounding_box.max(), cell_size_);
+	trgl.first.set_min_cell(discretize(bounding_box.min(), cell_size_));
+	trgl.first.set_max_cell(discretize(bounding_box.max(), cell_size_));
 
 	MSG("Bounding box is contained in cells:\n");
-	for (double x = trgl.first.min_cell().x(); x <= trgl.first.max_cell().x(); ++x)
+	for (long long x = trgl.first.min_cell().x; x <= trgl.first.max_cell().x; ++x)
 	{
-		for (double y = trgl.first.min_cell().y(); y <= trgl.first.max_cell().y(); ++y)
+		for (long long y = trgl.first.min_cell().y; y <= trgl.first.max_cell().y; ++y)
 		{
-			for (double z = trgl.first.min_cell().z(); z <= trgl.first.max_cell().z(); ++z)
+			for (long long z = trgl.first.min_cell().z; z <= trgl.first.max_cell().z; ++z)
 			{
 				LOG("({}, {}, {})\n", x, y, z);
 				Cell cell_key(x, y, z);
@@ -114,13 +114,13 @@ multi_inter::LabeledTriangles close_triangles(	  const multi_inter::LabeledTrian
 	grid.dump_cells();
 	#endif
 
-	for (double x = triangle.first.min_cell().x(); x <= triangle.first.max_cell().x(); ++x)
+	for (long long x = triangle.first.min_cell().x; x <= triangle.first.max_cell().x; ++x)
 	{
-		for (double y = triangle.first.min_cell().y(); y <= triangle.first.max_cell().y(); ++y)
+		for (long long y = triangle.first.min_cell().y; y <= triangle.first.max_cell().y; ++y)
 		{
-			for (double z = triangle.first.min_cell().z(); z <= triangle.first.max_cell().z(); ++z)
+			for (long long z = triangle.first.min_cell().z; z <= triangle.first.max_cell().z; ++z)
 			{
-				multi_inter::Cell cell_key(x, y, z);
+				Cell cell_key(x, y, z);
 
 				if (grid.find(cell_key) != grid.end())
 				{

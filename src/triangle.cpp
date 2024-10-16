@@ -103,12 +103,6 @@ void Triangle3::distance_sort(Distances& dists)
 	}
 }
 
-Point3&       Triangle3::min_cell()      { return min_cell_; }
-const Point3& Triangle3::min_cell() const { return min_cell_; }
-Point3&       Triangle3::max_cell()       { return max_cell_; }
-const Point3& Triangle3::max_cell() const { return max_cell_; }
-
-
 Triangle2::Triangle2(const Point2& pnt_1, const Point2& pnt_2, const Point2& pnt_3):
 	Triangle_Base(pnt_1, pnt_2, pnt_3) {}
 

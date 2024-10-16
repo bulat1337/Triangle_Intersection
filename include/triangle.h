@@ -5,7 +5,9 @@
 #include <array>      // for array
 #include <iostream>   // for istream
 #include <stdexcept>  // for logic_error
+
 #include "vec.h"      // for Point3, Point2, operator>>
+#include "cell.h"
 
 class Distances;
 
@@ -77,23 +79,22 @@ std::istream& operator >> (std::istream& is, Triangle_Base<Point>& triangle)
 class Triangle3 : public Triangle_Base<Point3>
 {
   private:
-	Point3 min_cell_;
-	Point3 max_cell_;
+	Cell min_cell_;
+	Cell max_cell_;
 
 	static void sort_vertices(std::array<Point3, 3>& points);
 
   public:
-	// разбить на функции
-	Triangle3(	const Point3& pnt_1
+	Triangle3(	  const Point3& pnt_1
 				, const Point3& pnt_2
 				, const Point3& pnt_3);
 
 	void distance_sort(Distances& dists);
 
-	Point3&       min_cell();
-	const Point3& min_cell() const;
-	Point3&       max_cell();
-	const Point3& max_cell() const;
+	const Cell& min_cell() const { return min_cell_; }
+	const Cell& max_cell() const { return max_cell_; }
+	void set_min_cell(const Cell& value) { min_cell_ = value; }
+	void set_max_cell(const Cell& value) { max_cell_ = value; }
 };
 
 class Triangle2 : public Triangle_Base<Point2>

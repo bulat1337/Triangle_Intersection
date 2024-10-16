@@ -12,24 +12,10 @@
 
 #include "triangle.h"     // for Triangle3
 #include "vec.h"          // for Point3
+#include "cell.h"
 
 namespace multi_inter
 {
-
-struct Cell
-{
-	long long x;
-	long long y;
-	long long z;
-
-	Cell(long long x, long long y, long long z):
-		x(x), y(y), z(z) {}
-
-	bool operator == (const Cell& other) const
-	{
-		return x == other.x && y == other.y && z == other.z;
-	}
-};
 
 enum class status_t
 {
