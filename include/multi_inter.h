@@ -3,16 +3,15 @@
 
 #include <stddef.h>       // for size_t
 
-#include <functional>     // for hash
+#include <functional>     // for hash, __scalar_hash
 #include <istream>        // for istream
 #include <set>            // for set
 #include <unordered_map>  // for unordered_map
 #include <utility>        // for pair
 #include <vector>         // for vector
 
+#include "cell.h"         // for Cell
 #include "triangle.h"     // for Triangle3
-#include "vec.h"          // for Point3
-#include "cell.h"
 
 namespace multi_inter
 {

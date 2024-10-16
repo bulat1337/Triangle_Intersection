@@ -1,19 +1,17 @@
 #include "multi_inter.h"
 
-#include "multi_inter.h"
-
 #include <algorithm>       // for max, min
 #include <cmath>           // for floor, sqrt
-#include <iostream>        // for cout
+#include <iostream>        // for cerr, cout
 #include <set>             // for set
 #include <unordered_map>   // for operator==, unordered_map, __hash_map_cons...
 #include <unordered_set>   // for unordered_set
 #include <vector>          // for vector
-#include <variant>
 
 #include "bounding_box.h"  // for Bounding_box
 #include "intersects.h"    // for intersects3
 #include "log.h"           // for LOG, MSG
+#include "vec.h"           // for Vec3, operator-, operator>>, Point3
 
 namespace
 {
