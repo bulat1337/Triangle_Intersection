@@ -36,5 +36,4 @@ do												\
 #endif // __cpp_lib_format
 
 
-
 #endif // LOG_H

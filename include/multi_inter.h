@@ -16,6 +16,12 @@
 namespace multi_inter
 {
 
+enum class status_t
+{
+	  all_good
+	, invalid_amount
+	, invalid_coordinate
+};
 
 using LabeledTriangle  = std::pair<Triangle3, size_t>;
 using LabeledTriangles = std::vector<LabeledTriangle>;
@@ -54,14 +60,15 @@ class Grid
 	void dump_cells() const;
 };
 
-
-[[nodiscard]] LabeledTriangles get_triangles(std::istream& in);
+status_t get_triangles(std::istream& in, LabeledTriangles& triangles);
 
 [[nodiscard]] double calc_cell_size(const LabeledTriangles& triangles);
 
 void intersect_close_trinagles(	  std::set<size_t>& intersecting_ids
 								, const LabeledTriangles& triangles
 								, const Grid& grid);
+
+bool check_status(status_t status);
 
 };
 

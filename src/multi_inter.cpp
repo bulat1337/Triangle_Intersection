@@ -9,6 +9,7 @@
 #include <unordered_map>   // for operator==, unordered_map, __hash_map_cons...
 #include <unordered_set>   // for unordered_set
 #include <vector>          // for vector
+#include <variant>
 
 #include "bounding_box.h"  // for Bounding_box
 #include "intersects.h"    // for intersects3
@@ -147,12 +148,19 @@ multi_inter::LabeledTriangles close_triangles(	  const multi_inter::LabeledTrian
 
 };
 
-[[nodiscard]] multi_inter::LabeledTriangles multi_inter::get_triangles(std::istream& in)
+multi_inter::status_t
+multi_inter::get_triangles(std::istream& in, multi_inter::LabeledTriangles& triangles)
 {
-	size_t triangle_amount = 0;
-	in >> triangle_amount;
+	long long inputted_amount = 0;
+	in >> inputted_amount;
 
-	LabeledTriangles triangles;
+	if (inputted_amount < 0)
+	{
+		return status_t::invalid_amount;
+	}
+
+	size_t triangle_amount = static_cast<size_t>(inputted_amount);
+
 	triangles.reserve(triangle_amount);
 
 	for (size_t triangle_id = 0; triangle_id < triangle_amount; ++triangle_id)
@@ -161,14 +169,17 @@ multi_inter::LabeledTriangles close_triangles(	  const multi_inter::LabeledTrian
 		Point3 pnt_2;
 		Point3 pnt_3;
 
-		in >> pnt_1 >> pnt_2 >> pnt_3;
+		if (!(in >> pnt_1 >> pnt_2 >> pnt_3))
+		{
+			return status_t::invalid_coordinate;
+		}
 
 		Triangle3 triangle(pnt_1, pnt_2, pnt_3);
 
 		triangles.push_back({triangle, triangle_id});
 	}
 
-	return triangles;
+	return status_t::all_good;
 }
 
 [[nodiscard]] double multi_inter::calc_cell_size(const multi_inter::LabeledTriangles& triangles)
@@ -233,4 +244,26 @@ void multi_inter::intersect_close_trinagles(  std::set<size_t>& intersecting_ids
 	// #endif
 
 	std::cout << "Intersection check amount: " << intersection_check_counter << '\n';
+}
+
+bool multi_inter::check_status(multi_inter::status_t status)
+{
+	if (status == status_t::all_good) return false;
+
+	switch (status)
+	{
+		case status_t::all_good:
+			return true;
+		case status_t::invalid_amount:
+			std::cerr << 	"ERROR: Invalid amount: "
+							"please enter non negative number\n";
+			break;
+		case status_t::invalid_coordinate:
+			std::cerr << "ERROR: Please enter floating point as the triangle coordinate\n";
+			break;
+		default:
+			std::cerr << "ERROR: Unknown\n";
+	}
+
+	return true;
 }

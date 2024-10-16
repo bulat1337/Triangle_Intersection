@@ -7,8 +7,12 @@
 
 int main()
 {
+	multi_inter::status_t status = multi_inter::status_t::all_good;
+
 	MSG("Getting triangles\n");
-	multi_inter::LabeledTriangles triangles = multi_inter::get_triangles(std::cin);
+	multi_inter::LabeledTriangles triangles;
+	status = multi_inter::get_triangles(std::cin, triangles);
+	if (multi_inter::check_status(status)) return 0;
 
 	MSG("Calculating cell_size\n");
 	double cell_size = multi_inter::calc_cell_size(triangles);

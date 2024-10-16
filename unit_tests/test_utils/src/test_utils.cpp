@@ -20,7 +20,9 @@ std::string get_result(const std::string& file_name)
 
 	test_data.open(file_name);
 
-	multi_inter::LabeledTriangles triangles = multi_inter::get_triangles(test_data);
+	multi_inter::LabeledTriangles triangles;
+
+	multi_inter::get_triangles(test_data, triangles);
 
 	double cell_size = multi_inter::calc_cell_size(triangles);
 
