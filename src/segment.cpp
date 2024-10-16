@@ -1,8 +1,12 @@
 #include "segment.h"
 
-#include "vec.h"
-#include "utils.h"
-#include "log.h"
+#include <stdlib.h>   // for abs
+#include <algorithm>  // for max, min
+#include <cmath>      // for abs
+
+#include "log.h"      // for MSG, LOG
+#include "utils.h"    // for cmp_double
+#include "vec.h"      // for dot, Vec2, operator-, operator<<, Point2
 
 bool Segment2::point_on_segment(const Point2& pnt, const Segment2& sgm) const
 {

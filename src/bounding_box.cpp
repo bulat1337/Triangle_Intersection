@@ -1,8 +1,8 @@
 #include "bounding_box.h"
 
-#include "triangle.h"
+#include <algorithm>   // for max, min
 
-#include "cmath"
+#include "triangle.h"  // for Triangle3
 
 Bounding_box::Bounding_box(const Triangle3& triangle)
 {

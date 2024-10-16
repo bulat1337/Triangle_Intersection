@@ -91,7 +91,7 @@ bool Vec3::operator ==(const Vec3& other) const
 
 double Vec3::sq_length() const
 {
-	return 	x_ * x_
+	return 	  x_ * x_
 			+ y_ * y_
 			+ z_ * z_;
 }

@@ -460,6 +460,11 @@ TEST(bd_tests, amount_100)
 	test_utils::run_test("/bd_tests/amount-100");
 }
 
+TEST(bd_tests, amount_10000)
+{
+	test_utils::run_test("/bd_tests/amount-10000");
+}
+
 
 #endif
 

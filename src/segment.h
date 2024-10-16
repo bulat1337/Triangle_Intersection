@@ -1,9 +1,10 @@
 #ifndef SEGMENT_H
 #define SEGMENT_H
 
-#include "vec.h"
-#include "utils.h"
-#include "log.h"
+#include <ostream>  // for ostream
+
+#include "utils.h"  // for cmp_double
+#include "vec.h"    // for Point2, Vec2
 
 class Segment2
 {

@@ -39,7 +39,7 @@ class Grid
 
   public:
 	Grid(double cell_size) :
-		cell_size_(cell_size) {}
+		cell_size_(cell_size) { cells_.reserve(100000); }
 
 	void insert_all(LabeledTriangles& triangles);
 

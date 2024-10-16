@@ -1,9 +1,12 @@
 #include "multi_inter.h"
 
+#include "multi_inter.h"
+
 #include <algorithm>       // for max, min
-#include <cmath>           // for floor
+#include <cmath>           // for floor, sqrt
+#include <iostream>        // for cout
 #include <set>             // for set
-#include <unordered_map>   // for unordered_map, operator==, __hash_map_cons...
+#include <unordered_map>   // for operator==, unordered_map, __hash_map_cons...
 #include <unordered_set>   // for unordered_set
 #include <vector>          // for vector
 
@@ -30,6 +33,7 @@ void multi_inter::Grid::insert_all(LabeledTriangles& triangles)
 {
 	for (auto& triangle : triangles)
 	{
+		LOG("Inserting {}\n", triangle.second);
 		insert(triangle);
 	}
 }
@@ -74,7 +78,7 @@ void multi_inter::Grid::dump_cells() const
 namespace
 {
 
-const double cell_size_coeff = 1.1;
+const double cell_size_coeff = 7.0;
 
 struct Hash_ul_pair
 {
@@ -177,12 +181,13 @@ multi_inter::LabeledTriangles close_triangles(	  const multi_inter::LabeledTrian
 		Vec3 side_2 = triangle.first.pnt_3() - triangle.first.pnt_2();
 		Vec3 side_3 = triangle.first.pnt_1() - triangle.first.pnt_3();
 
-		all_sides_length += side_1.length();
-		all_sides_length += side_2.length();
-		all_sides_length += side_3.length();
+		// sq_length
+		all_sides_length += side_1.sq_length();
+		all_sides_length += side_2.sq_length();
+		all_sides_length += side_3.sq_length();
 	}
 
-	double cell_size = cell_size_coeff * (all_sides_length / (triangles.size() * 3));
+	double cell_size = cell_size_coeff * std::sqrt((all_sides_length / (triangles.size() * 3)));
 	LOG("Calculated cell size: {}\n", cell_size);
 
 	return cell_size;
@@ -192,9 +197,9 @@ void multi_inter::intersect_close_trinagles(  std::set<size_t>& intersecting_ids
 											, const multi_inter::LabeledTriangles& triangles
 											, const Grid& grid)
 {
-	#ifdef DEBUG
+	// #ifdef DEBUG
 	size_t intersection_check_counter = 0;
-	#endif
+	// #endif
 
 	CollisionSet added_potentials;
 
@@ -204,11 +209,13 @@ void multi_inter::intersect_close_trinagles(  std::set<size_t>& intersecting_ids
 																, grid
 																, added_potentials);
 
+		LOG("Checking intersections of triangle {}\n", triangle.second);
+
 		for (const auto& potential : potential_collisions)
 		{
-			#ifdef DEBUG
+			// #ifdef DEBUG
 			++intersection_check_counter;
-			#endif
+			// #endif
 
 			LOG("Checking the intersecton of {} and {}\n", triangle.second, potential.second);
 			if (intersects3(triangle.first, potential.first))
@@ -221,7 +228,9 @@ void multi_inter::intersect_close_trinagles(  std::set<size_t>& intersecting_ids
 		}
 	}
 
-	#ifdef DEBUG
-	LOG("Intersection check amount: {}\n", intersection_check_counter);
-	#endif
+	// #ifdef DEBUG
+	// LOG("Intersection check amount: {}\n", intersection_check_counter);
+	// #endif
+
+	std::cout << "Intersection check amount: " << intersection_check_counter << '\n';
 }

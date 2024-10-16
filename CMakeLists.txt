@@ -104,7 +104,8 @@ add_library(intersects STATIC
 	src/segment.cpp)
 
 target_include_directories(intersects PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/include)
+	${CMAKE_CURRENT_SOURCE_DIR}/include
+	${CMAKE_CURRENT_SOURCE_DIR}/utils/include)
 
 if(ENABLE_LOGGING)
 	target_compile_definitions(intersects PRIVATE ENABLE_LOGGING)
@@ -125,7 +126,8 @@ endif()
 
 add_executable(intersect.x ./main.cpp)
 target_include_directories(intersect.x PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/include)
+	${CMAKE_CURRENT_SOURCE_DIR}/include
+	${CMAKE_CURRENT_SOURCE_DIR}/utils/include)
 
 if(ENABLE_LOGGING)
 	target_compile_definitions(intersect.x PRIVATE ENABLE_LOGGING)
