@@ -1,3 +1,6 @@
+#ifndef INTERSECTION_H
+#define INTERSECTION_H
+
 #include "intersects.h"
 
 #include <stddef.h>     // for size_t
@@ -11,45 +14,44 @@
 #include "utils.h"      // for Axis, get_max_axis
 #include "vec.h"        // for Vec3, Point2, cross
 
-namespace
-{
-
-Triangle2 project(const Triangle3& triangle, utils::Axis max_normal_axis)
+template <typename FltPnt>
+Triangle2<FltPnt> project(const Triangle3<FltPnt>& triangle, utils::Axis max_normal_axis)
 {
 	switch(max_normal_axis)
 	{
 		case utils::Axis::x:
 			MSG("Projecting on Oyz\n");
 
-			return Triangle2(     Point2(triangle.pnt_1().y(), triangle.pnt_1().z())
-								, Point2(triangle.pnt_2().y(), triangle.pnt_2().z())
-								, Point2(triangle.pnt_3().y(), triangle.pnt_3().z()));
+			return Triangle2<FltPnt>(     Point2<FltPnt>(triangle.pnt_1().y(), triangle.pnt_1().z())
+										, Point2<FltPnt>(triangle.pnt_2().y(), triangle.pnt_2().z())
+										, Point2<FltPnt>(triangle.pnt_3().y(), triangle.pnt_3().z()));
 		case utils::Axis::y:
 			MSG("Projecting on Oxz\n");
 
-			return Triangle2(     Point2(triangle.pnt_1().x(), triangle.pnt_1().z())
-								, Point2(triangle.pnt_2().x(), triangle.pnt_2().z())
-								, Point2(triangle.pnt_3().x(), triangle.pnt_3().z()));
+			return Triangle2<FltPnt>(     Point2<FltPnt>(triangle.pnt_1().x(), triangle.pnt_1().z())
+										, Point2<FltPnt>(triangle.pnt_2().x(), triangle.pnt_2().z())
+										, Point2<FltPnt>(triangle.pnt_3().x(), triangle.pnt_3().z()));
 		case utils::Axis::z:
 			MSG("Projecting on Oxy\n");
 
-			return Triangle2(     Point2(triangle.pnt_1().x(), triangle.pnt_1().y())
-								, Point2(triangle.pnt_2().x(), triangle.pnt_2().y())
-								, Point2(triangle.pnt_3().x(), triangle.pnt_3().y()));
+			return Triangle2<FltPnt>(     Point2<FltPnt>(triangle.pnt_1().x(), triangle.pnt_1().y())
+										, Point2<FltPnt>(triangle.pnt_2().x(), triangle.pnt_2().y())
+										, Point2<FltPnt>(triangle.pnt_3().x(), triangle.pnt_3().y()));
 	}
 }
 
-bool intersects2(const Triangle2& lhs, const Triangle2& rhs)
+template <typename FltPnt>
+bool intersects2(const Triangle2<FltPnt>& lhs, const Triangle2<FltPnt>& rhs)
 {
 	for (size_t lhs_side_id = 0; lhs_side_id < 3; ++lhs_side_id)
 	{
-		Segment2 lhs_side(    lhs[lhs_side_id]
-							, lhs[lhs_side_id >= 2 ? 0 : lhs_side_id + 1]);
+		Segment2<FltPnt> lhs_side(    lhs[lhs_side_id]
+									, lhs[lhs_side_id >= 2 ? 0 : lhs_side_id + 1]);
 
 		for (size_t rhs_side_id = 0; rhs_side_id < 3; ++rhs_side_id)
 		{
-			Segment2 rhs_side(	  rhs[rhs_side_id]
-								, rhs[rhs_side_id >= 2 ? 0 : rhs_side_id + 1]);
+			Segment2<FltPnt> rhs_side(	  rhs[rhs_side_id]
+										, rhs[rhs_side_id >= 2 ? 0 : rhs_side_id + 1]);
 
 			LOG("Testing if side {} intersects {}\n", lhs_side_id, rhs_side_id);
 
@@ -73,8 +75,9 @@ bool intersects2(const Triangle2& lhs, const Triangle2& rhs)
 	return false;
 }
 
-Interval compute_interval(	  Triangle3 triangle
-							, Distances& triangle_dists
+template <typename FltPnt>
+Interval compute_interval(	  Triangle3<FltPnt> triangle
+							, Distances<FltPnt>& triangle_dists
 							, const utils::Axis& max_axis)
 {
 	triangle.distance_sort(triangle_dists);
@@ -82,7 +85,7 @@ Interval compute_interval(	  Triangle3 triangle
 	double min = 0.0;
 	double max = 0.0;
 
-	auto get_coord = [max_axis](const Point3& pnt)
+	auto get_coord = [max_axis](const Point3<FltPnt>& pnt)
 	{
 		switch (max_axis)
 		{
@@ -109,13 +112,13 @@ Interval compute_interval(	  Triangle3 triangle
 
 	return Interval(min, max);
 }
-}
 
-bool intersects3(const Triangle3& lhs, const Triangle3& rhs)
+template <typename FltPnt>
+bool intersects3(const Triangle3<FltPnt>& lhs, const Triangle3<FltPnt>& rhs)
 {
-	Plane3 rhs_plane(rhs);
+	Plane3<FltPnt> rhs_plane(rhs.pnt_1(), rhs.pnt_2(), rhs.pnt_3());
 
-	Distances lhs_dists(lhs, rhs_plane);
+	Distances lhs_dists(lhs.pnt_1(), lhs.pnt_2(), lhs.pnt_3(), rhs_plane);
 
 	if(lhs_dists.same_sign())
 	{
@@ -123,9 +126,9 @@ bool intersects3(const Triangle3& lhs, const Triangle3& rhs)
 		return false;
 	}
 
-	Plane3 lhs_plane(lhs);
+	Plane3 lhs_plane(lhs.pnt_1(), lhs.pnt_2(), lhs.pnt_3());
 
-	Distances rhs_dists(rhs, lhs_plane);
+	Distances rhs_dists(rhs.pnt_1(), rhs.pnt_2(), rhs.pnt_3(), lhs_plane);
 
 	if(rhs_dists.same_sign())
 	{
@@ -158,3 +161,6 @@ bool intersects3(const Triangle3& lhs, const Triangle3& rhs)
 
 	return true;
 }
+
+
+#endif // INTERSECTION_H

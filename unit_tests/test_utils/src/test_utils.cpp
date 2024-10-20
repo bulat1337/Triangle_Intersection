@@ -20,13 +20,13 @@ std::string get_result(const std::string& file_name)
 
 	test_data.open(file_name);
 
-	multi_inter::LabeledTriangles triangles;
+	multi_inter::LabeledTriangles<double> triangles;
 
 	multi_inter::get_triangles(test_data, triangles);
 
 	double cell_size = multi_inter::calc_cell_size(triangles);
 
-	multi_inter::Grid grid(cell_size);
+	multi_inter::Grid<double> grid(cell_size);
 
 	grid.insert_all(triangles);
 

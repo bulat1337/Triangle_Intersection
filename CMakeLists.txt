@@ -81,38 +81,6 @@ set(DEBUG_COMPILE_OPTIONS
 	-fsanitize=address,alignment,bool,bounds,enum,float-cast-overflow,float-divide-by-zero,integer-divide-by-zero,nonnull-attribute,null,return,returns-nonnull-attribute,shift,signed-integer-overflow,undefined,unreachable,vla-bound,vptr
 )
 
-# ----- intersects library -----
-
-add_library(intersects STATIC
-	src/intersects.cpp
-	src/vec.cpp
-	src/utils.cpp
-	src/distances.cpp
-	src/plane.cpp
-	src/triangle.cpp
-	src/multi_inter.cpp
-	src/bounding_box.cpp
-	src/segment.cpp)
-
-target_include_directories(intersects PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/include
-	${CMAKE_CURRENT_SOURCE_DIR}/utils/include)
-
-if(ENABLE_LOGGING)
-	target_compile_definitions(intersects PRIVATE ENABLE_LOGGING)
-endif()
-
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	target_compile_options(intersects PRIVATE ${DEBUG_COMPILE_OPTIONS})
-	target_compile_definitions(intersects PRIVATE DEBUG)
-
-	target_link_options(intersects PRIVATE
-		-fsanitize=address,alignment,bool,bounds,enum,float-cast-overflow,float-divide-by-zero,nonnull-attribute,null,return,returns-nonnull-attribute,shift,signed-integer-overflow,undefined,unreachable,vla-bound,vptr
-	)
-else()
-	target_compile_options(intersects PRIVATE ${RELEASE_COMPILE_OPTIONS})
-endif()
-
 # ----- executable -----
 
 add_executable(intersect.x ./main.cpp)
@@ -134,6 +102,4 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 else()
 	target_compile_options(intersect.x PRIVATE ${RELEASE_COMPILE_OPTIONS})
 endif()
-
-target_link_libraries(intersect.x PRIVATE intersects)
 

@@ -10,7 +10,7 @@ int main()
 	multi_inter::status_t status = multi_inter::status_t::all_good;
 
 	MSG("Getting triangles\n");
-	multi_inter::LabeledTriangles triangles;
+	multi_inter::LabeledTriangles<double> triangles;
 	status = multi_inter::get_triangles(std::cin, triangles);
 	if (multi_inter::check_status(status)) return 0;
 
@@ -19,7 +19,7 @@ int main()
 
 	LOG("Cell size: {}\n", cell_size);
 
-	multi_inter::Grid grid(cell_size);
+	multi_inter::Grid<double> grid(cell_size);
 
 	MSG("Inserting triangles in the grid\n");
 	grid.insert_all(triangles);
