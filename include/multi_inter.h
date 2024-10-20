@@ -12,6 +12,7 @@
 #include <unordered_set> // for unordered_set
 #include <utility>       // for pair
 #include <vector>        // for vector
+#include <limits>
 
 #include "bounding_box.h" // for Bounding_box
 #include "cell.h"         // for Cell
@@ -46,11 +47,32 @@ using LabeledTriangles = std::vector<LabeledTriangle<FltPnt>>;
 
 struct Hash_Cell
 {
-    size_t operator()(const Cell &key) const
+  private:
+	const long long x_coeff = 73856093;
+	const long long y_coeff = 19349663;
+	const long long z_coeff = 83492791;
+
+  public:
+    long long operator()(const Cell &key) const
     {
-        return std::hash<long long>()(key.x * 73856093) ^
-               std::hash<long long>()(key.y * 19349663) ^
-               std::hash<long long>()(key.z * 83492791);
+		long long transformed_x =
+			std::numeric_limits<const long long>::max() / x_coeff > key.x
+			? key.x * x_coeff
+			: key.x;
+
+		long long transformed_y =
+			std::numeric_limits<const long long>::max() / y_coeff > key.y
+			? key.y * y_coeff
+			: key.y;
+
+		long long transformed_z =
+			std::numeric_limits<const long long>::max() / z_coeff > key.z
+			? key.z * z_coeff
+			: key.z;
+
+        return (transformed_x ^
+               	transformed_y ^
+               	transformed_z);
     }
 };
 
@@ -127,7 +149,7 @@ template <typename FltPnt> class Grid
 
 // secondary
 
-const double cell_size_coeff = 7.0;
+const double cell_size_coeff = 2.0;
 
 struct Hash_ul_pair
 {
@@ -266,9 +288,9 @@ void intersect_close_trinagles(std::set<size_t> &intersecting_ids,
                                const LabeledTriangles<FltPnt> &triangles,
                                const Grid<FltPnt> &grid)
 {
-    // #ifdef DEBUG
+    #ifdef DEBUG
     size_t intersection_check_counter = 0;
-    // #endif
+    #endif
 
     CollisionSet added_potentials;
 
@@ -281,9 +303,9 @@ void intersect_close_trinagles(std::set<size_t> &intersecting_ids,
 
         for (const auto &potential : potential_collisions)
         {
-            // #ifdef DEBUG
+            #ifdef DEBUG
             ++intersection_check_counter;
-            // #endif
+            #endif
 
             LOG("Checking the intersecton of {} and {}\n", triangle.second,
                 potential.second);
@@ -299,12 +321,9 @@ void intersect_close_trinagles(std::set<size_t> &intersecting_ids,
         }
     }
 
-    // #ifdef DEBUG
-    // LOG("Intersection check amount: {}\n", intersection_check_counter);
-    // #endif
-
-    std::cout << "Intersection check amount: " << intersection_check_counter
-              << '\n';
+    #ifdef DEBUG
+    LOG("Intersection check amount: {}\n", intersection_check_counter);
+    #endif
 }
 
 bool check_status(status_t status)
