@@ -5,7 +5,7 @@
 
 namespace test_utils
 {
-	void run_test(const std::string& test_name);
+void run_test(const std::string &test_name);
 };
 
 #endif

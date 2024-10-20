@@ -3,19 +3,22 @@
 
 struct Cell
 {
-	long long x = 0;
-	long long y = 0;
-	long long z = 0;
+    long long x = 0;
+    long long y = 0;
+    long long z = 0;
 
-	Cell() = default;
+    Cell() = default;
 
-	Cell(long long x, long long y, long long z):
-		x(x), y(y), z(z) {}
+    Cell(long long x, long long y, long long z)
+        : x(x)
+        , y(y)
+        , z(z)
+    {}
 
-	bool operator == (const Cell& other) const
-	{
-		return x == other.x && y == other.y && z == other.z;
-	}
+    bool operator==(const Cell &other) const
+    {
+        return x == other.x && y == other.y && z == other.z;
+    }
 };
 
 #endif
