@@ -29,9 +29,9 @@ t_inter::detail::Cell discretize(const t_inter::detail::Point3<FltPnt> &point,
                                  double cell_size)
 {
     return t_inter::detail::Cell(
-        static_cast<long long>(std::floor(point.x() / cell_size)),
-        static_cast<long long>(std::floor(point.y() / cell_size)),
-        static_cast<long long>(std::floor(point.z() / cell_size)));
+        static_cast<long long>(std::floor(point.x / cell_size)),
+        static_cast<long long>(std::floor(point.y / cell_size)),
+        static_cast<long long>(std::floor(point.z / cell_size)));
 }
 
 enum class status_t
@@ -106,9 +106,8 @@ template <typename FltPnt> class Grid
         t_inter::detail::Bounding_box bounding_box(trgl.first);
 
         LOG("Bounding box is from ({}, {}, {}) to ({}, {}, {})\n",
-            bounding_box.min().x(), bounding_box.min().y(),
-            bounding_box.min().z(), bounding_box.max().x(),
-            bounding_box.max().y(), bounding_box.max().z());
+            bounding_box.min().x, bounding_box.min().y, bounding_box.min().z,
+            bounding_box.max().x, bounding_box.max().y, bounding_box.max().z);
 
         trgl.first.set_min_cell(discretize(bounding_box.min(), cell_size_));
         trgl.first.set_max_cell(discretize(bounding_box.max(), cell_size_));
@@ -144,8 +143,8 @@ template <typename FltPnt> class Grid
     {
         for ([[maybe_unused]] const auto &elem : cells_)
         {
-            LOG("In cell ({}, {}, {})\n", elem.first.x(), elem.first.y(),
-                elem.first.z());
+            LOG("In cell ({}, {}, {})\n", elem.first.x, elem.first.y,
+                elem.first.z);
 
             LOG("There is {} triangles\n", elem.second.size());
         }
@@ -229,7 +228,7 @@ close_triangles(const LabeledTriangle<FltPnt> &triangle,
     return potential_collisions;
 }
 
-};
+}; // namespace detail
 
 template <typename FltPnt>
 status_t get_triangles(std::istream &in, LabeledTriangles<FltPnt> &triangles)
@@ -273,11 +272,11 @@ template <typename FltPnt>
     for (const auto &triangle : triangles)
     {
         t_inter::detail::Vec3 side_1 =
-            triangle.first.pnt_2() - triangle.first.pnt_1();
+            triangle.first.pnt_2 - triangle.first.pnt_1;
         t_inter::detail::Vec3 side_2 =
-            triangle.first.pnt_3() - triangle.first.pnt_2();
+            triangle.first.pnt_3 - triangle.first.pnt_2;
         t_inter::detail::Vec3 side_3 =
-            triangle.first.pnt_1() - triangle.first.pnt_3();
+            triangle.first.pnt_1 - triangle.first.pnt_3;
 
         // sq_length
         all_sides_length += side_1.sq_length();

@@ -47,9 +47,9 @@ enum class Axis
 
 template <typename FltPnt> Axis get_max_axis(const Vec3<FltPnt> &vec)
 {
-    if (cmp_double(std::abs(vec.x()), std::abs(vec.y())) >= 0)
+    if (cmp_double(std::abs(vec.x), std::abs(vec.y)) >= 0)
     {
-        if (cmp_double(std::abs(vec.x()), std::abs(vec.z())) >= 0)
+        if (cmp_double(std::abs(vec.x), std::abs(vec.z)) >= 0)
         {
             return Axis::x;
         }
@@ -58,7 +58,7 @@ template <typename FltPnt> Axis get_max_axis(const Vec3<FltPnt> &vec)
     }
     else
     {
-        if (cmp_double(std::abs(vec.y()), std::abs(vec.z())) >= 0)
+        if (cmp_double(std::abs(vec.y), std::abs(vec.z)) >= 0)
         {
             return Axis::y;
         }

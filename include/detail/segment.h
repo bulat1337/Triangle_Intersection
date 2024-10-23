@@ -24,8 +24,8 @@ template <typename FltPnt> class Segment2
 
     bool is_point(const Vec2<FltPnt> &direc) const
     {
-        return utils::cmp_double(direc.x(), 0) == 0 &&
-               utils::cmp_double(direc.y(), 0) == 0;
+        return utils::cmp_double(direc.x, 0) == 0 &&
+               utils::cmp_double(direc.y, 0) == 0;
     }
 
     bool point_on_segment(const Point2<FltPnt> &pnt,

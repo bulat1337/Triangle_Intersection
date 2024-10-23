@@ -30,23 +30,23 @@ Triangle2<FltPnt> project(const Triangle3<FltPnt> &triangle,
             MSG("Projecting on Oyz\n");
 
             return Triangle2<FltPnt>(
-                Point2<FltPnt>(triangle.pnt_1().y(), triangle.pnt_1().z()),
-                Point2<FltPnt>(triangle.pnt_2().y(), triangle.pnt_2().z()),
-                Point2<FltPnt>(triangle.pnt_3().y(), triangle.pnt_3().z()));
+                Point2<FltPnt>(triangle.pnt_1.y, triangle.pnt_1.z),
+                Point2<FltPnt>(triangle.pnt_2.y, triangle.pnt_2.z),
+                Point2<FltPnt>(triangle.pnt_3.y, triangle.pnt_3.z));
         case utils::Axis::y:
             MSG("Projecting on Oxz\n");
 
             return Triangle2<FltPnt>(
-                Point2<FltPnt>(triangle.pnt_1().x(), triangle.pnt_1().z()),
-                Point2<FltPnt>(triangle.pnt_2().x(), triangle.pnt_2().z()),
-                Point2<FltPnt>(triangle.pnt_3().x(), triangle.pnt_3().z()));
+                Point2<FltPnt>(triangle.pnt_1.x, triangle.pnt_1.z),
+                Point2<FltPnt>(triangle.pnt_2.x, triangle.pnt_2.z),
+                Point2<FltPnt>(triangle.pnt_3.x, triangle.pnt_3.z));
         case utils::Axis::z:
             MSG("Projecting on Oxy\n");
 
             return Triangle2<FltPnt>(
-                Point2<FltPnt>(triangle.pnt_1().x(), triangle.pnt_1().y()),
-                Point2<FltPnt>(triangle.pnt_2().x(), triangle.pnt_2().y()),
-                Point2<FltPnt>(triangle.pnt_3().x(), triangle.pnt_3().y()));
+                Point2<FltPnt>(triangle.pnt_1.x, triangle.pnt_1.y),
+                Point2<FltPnt>(triangle.pnt_2.x, triangle.pnt_2.y),
+                Point2<FltPnt>(triangle.pnt_3.x, triangle.pnt_3.y));
     }
 }
 
@@ -102,27 +102,25 @@ Interval compute_interval(Triangle3<FltPnt> triangle,
         switch (max_axis)
         {
             case utils::Axis::x:
-                return pnt.x();
+                return pnt.x;
             case utils::Axis::y:
-                return pnt.y();
+                return pnt.y;
             case utils::Axis::z:
-                return pnt.z();
+                return pnt.z;
         }
     };
 
     double sim_coeff =
         triangle_dists.first / (triangle_dists.first - triangle_dists.second);
 
-    min =
-        get_coord(triangle.pnt_1()) +
-        (get_coord(triangle.pnt_2()) - get_coord(triangle.pnt_1())) * sim_coeff;
+    min = get_coord(triangle.pnt_1) +
+          (get_coord(triangle.pnt_2) - get_coord(triangle.pnt_1)) * sim_coeff;
 
     sim_coeff =
         triangle_dists.third / (triangle_dists.third - triangle_dists.second);
 
-    max =
-        get_coord(triangle.pnt_3()) +
-        (get_coord(triangle.pnt_2()) - get_coord(triangle.pnt_3())) * sim_coeff;
+    max = get_coord(triangle.pnt_3) +
+          (get_coord(triangle.pnt_2) - get_coord(triangle.pnt_3)) * sim_coeff;
 
     return Interval(min, max);
 }
@@ -130,9 +128,9 @@ Interval compute_interval(Triangle3<FltPnt> triangle,
 template <typename FltPnt>
 bool intersects3(const Triangle3<FltPnt> &lhs, const Triangle3<FltPnt> &rhs)
 {
-    Plane3<FltPnt> rhs_plane(rhs.pnt_1(), rhs.pnt_2(), rhs.pnt_3());
+    Plane3<FltPnt> rhs_plane(rhs.pnt_1, rhs.pnt_2, rhs.pnt_3);
 
-    Distances lhs_dists(lhs.pnt_1(), lhs.pnt_2(), lhs.pnt_3(), rhs_plane);
+    Distances lhs_dists(lhs.pnt_1, lhs.pnt_2, lhs.pnt_3, rhs_plane);
 
     if (lhs_dists.same_sign())
     {
@@ -140,9 +138,9 @@ bool intersects3(const Triangle3<FltPnt> &lhs, const Triangle3<FltPnt> &rhs)
         return false;
     }
 
-    Plane3 lhs_plane(lhs.pnt_1(), lhs.pnt_2(), lhs.pnt_3());
+    Plane3 lhs_plane(lhs.pnt_1, lhs.pnt_2, lhs.pnt_3);
 
-    Distances rhs_dists(rhs.pnt_1(), rhs.pnt_2(), rhs.pnt_3(), lhs_plane);
+    Distances rhs_dists(rhs.pnt_1, rhs.pnt_2, rhs.pnt_3, lhs_plane);
 
     if (rhs_dists.same_sign())
     {

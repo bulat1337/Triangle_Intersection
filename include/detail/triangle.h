@@ -20,44 +20,36 @@ namespace detail
 
 template <typename Point> class Triangle_Base
 {
-  protected:
-    Point pnt_1_;
-    Point pnt_2_;
-    Point pnt_3_;
+  public:
+    Point pnt_1;
+    Point pnt_2;
+    Point pnt_3;
 
   public:
     Triangle_Base() = default;
 
     Triangle_Base(const Point &pnt_1, const Point &pnt_2, const Point &pnt_3)
-        : pnt_1_(pnt_1)
-        , pnt_2_(pnt_2)
-        , pnt_3_(pnt_3)
+        : pnt_1(pnt_1)
+        , pnt_2(pnt_2)
+        , pnt_3(pnt_3)
     {}
 
     Triangle_Base(const Triangle_Base &other)
-        : pnt_1_(other.pnt_1_)
-        , pnt_2_(other.pnt_2_)
-        , pnt_3_(other.pnt_3_)
+        : pnt_1(other.pnt_1)
+        , pnt_2(other.pnt_2)
+        , pnt_3(other.pnt_3)
     {}
-
-    const Point &pnt_1() const { return pnt_1_; }
-    const Point &pnt_2() const { return pnt_2_; }
-    const Point &pnt_3() const { return pnt_3_; }
-
-    void set_pnt_1(double value) { pnt_1_ = value; }
-    void set_pnt_2(double value) { pnt_2_ = value; }
-    void set_pnt_3(double value) { pnt_3_ = value; }
 
     const Point &operator[](size_t pnt_id) const
     {
         switch (pnt_id)
         {
             case 0:
-                return pnt_1_;
+                return pnt_1;
             case 1:
-                return pnt_2_;
+                return pnt_2;
             case 2:
-                return pnt_3_;
+                return pnt_3;
             default:
                 throw std::logic_error("Invalid point index");
         }
@@ -65,9 +57,9 @@ template <typename Point> class Triangle_Base
 
     Triangle_Base &operator=(const Triangle_Base &other)
     {
-        pnt_1_ = other.pnt_1();
-        pnt_2_ = other.pnt_2();
-        pnt_3_ = other.pnt_3();
+        pnt_1 = other.pnt_1;
+        pnt_2 = other.pnt_2;
+        pnt_3 = other.pnt_3;
 
         return *this;
     }
@@ -76,14 +68,7 @@ template <typename Point> class Triangle_Base
 template <typename Point>
 std::istream &operator>>(std::istream &is, Triangle_Base<Point> &triangle)
 {
-    Point pnt_1, pnt_2, pnt_3;
-
-    if (is >> pnt_1 >> pnt_2 >> pnt_3)
-    {
-        triangle.pnt_1() = pnt_1;
-        triangle.pnt_2() = pnt_2;
-        triangle.pnt_3() = pnt_3;
-    }
+    is >> triangle.pnt_1 >> triangle.pnt_2 >> triangle.pnt_3;
 
     return is;
 }
@@ -116,10 +101,10 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
                           [&center](const Point3<FltPnt> &p1,
                                     const Point3<FltPnt> &p2)
                           {
-                              double angle1 = atan2(p1.y() - center.y(),
-                                                    p1.x() - center.x());
-                              double angle2 = atan2(p2.y() - center.y(),
-                                                    p2.x() - center.x());
+                              double angle1 =
+                                  atan2(p1.y - center.y, p1.x - center.x);
+                              double angle2 =
+                                  atan2(p2.y - center.y, p2.x - center.x);
                               return angle1 < angle2;
                           });
                 break;
@@ -129,10 +114,10 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
                           [&center](const Point3<FltPnt> &p1,
                                     const Point3<FltPnt> &p2)
                           {
-                              double angle1 = atan2(p1.z() - center.z(),
-                                                    p1.y() - center.y());
-                              double angle2 = atan2(p2.z() - center.z(),
-                                                    p2.y() - center.y());
+                              double angle1 =
+                                  atan2(p1.z - center.z, p1.y - center.y);
+                              double angle2 =
+                                  atan2(p2.z - center.z, p2.y - center.y);
                               return angle1 < angle2;
                           });
                 break;
@@ -142,10 +127,10 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
                           [&center](const Point3<FltPnt> &p1,
                                     const Point3<FltPnt> &p2)
                           {
-                              double angle1 = atan2(p1.z() - center.z(),
-                                                    p1.x() - center.x());
-                              double angle2 = atan2(p2.z() - center.z(),
-                                                    p2.x() - center.x());
+                              double angle1 =
+                                  atan2(p1.z - center.z, p1.x - center.x);
+                              double angle2 =
+                                  atan2(p2.z - center.z, p2.x - center.x);
                               return angle1 < angle2;
                           });
                 break;
@@ -154,7 +139,7 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
         MSG("After sorting:\n");
         for ([[maybe_unused]] const auto &point : points)
         {
-            LOG("{} {} {}\n", point.x(), point.y(), point.z());
+            LOG("{} {} {}\n", point.x, point.y, point.z);
         }
     }
 
@@ -166,9 +151,9 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
 
         sort_vertices(points);
 
-        this->pnt_1_ = points[0];
-        this->pnt_2_ = points[1];
-        this->pnt_3_ = points[2];
+        this->pnt_1 = points[0];
+        this->pnt_2 = points[1];
+        this->pnt_3 = points[2];
     }
 
     void distance_sort(Distances<FltPnt> &dists)
@@ -185,16 +170,16 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
             std::swap(dists.first, dists.second);
             std::swap(dists.second, dists.third);
 
-            std::swap(this->pnt_1_, this->pnt_2_);
-            std::swap(this->pnt_2_, this->pnt_3_);
+            std::swap(this->pnt_1, this->pnt_2);
+            std::swap(this->pnt_2, this->pnt_3);
         }
         else
         {
             std::swap(dists.second, dists.third);
             std::swap(dists.first, dists.second);
 
-            std::swap(this->pnt_2_, this->pnt_3_);
-            std::swap(this->pnt_1_, this->pnt_2_);
+            std::swap(this->pnt_2, this->pnt_3);
+            std::swap(this->pnt_1, this->pnt_2);
         }
     }
 
@@ -215,10 +200,10 @@ class Triangle2 : public Triangle_Base<Point2<FltPnt>>
 
     bool contains(const Triangle2 &other) const
     {
-        Vec2 a_to_pnt = other.pnt_1_ - this->pnt_1_;
+        Vec2 a_to_pnt = other.pnt_1 - this->pnt_1;
 
-        Vec2 a_to_b = this->pnt_2_ - this->pnt_1_;
-        Vec2 a_to_c = this->pnt_3_ - this->pnt_1_;
+        Vec2 a_to_b = this->pnt_2 - this->pnt_1;
+        Vec2 a_to_c = this->pnt_3 - this->pnt_1;
 
         double ab_norm_proj = dot(a_to_pnt, a_to_b.clockwise_normal());
         LOG("ab_norm_proj = {}\n", ab_norm_proj);
@@ -235,8 +220,8 @@ class Triangle2 : public Triangle_Base<Point2<FltPnt>>
             return false;
         }
 
-        Vec2 b_to_c = this->pnt_3_ - this->pnt_2_;
-        Vec2 b_to_pnt = other.pnt_1_ - this->pnt_2_;
+        Vec2 b_to_c = this->pnt_3 - this->pnt_2;
+        Vec2 b_to_pnt = other.pnt_1 - this->pnt_2;
 
         double bc_norm_proj = dot(b_to_pnt, b_to_c.clockwise_normal());
 
