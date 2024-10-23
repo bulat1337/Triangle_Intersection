@@ -89,7 +89,8 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
 
         MSG("Normal vector is null-sized\n");
 
-        Point3<FltPnt> center = (points[0] + points[1] + points[2]) / 3.0;
+        Point3<FltPnt> center =
+            (points[0] + points[1] + points[2]) / static_cast<FltPnt>(3.0);
 
         utils::Axis dominant_axis = utils::get_max_axis(normal);
 

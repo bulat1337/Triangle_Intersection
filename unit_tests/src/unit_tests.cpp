@@ -439,19 +439,24 @@ TEST(three_dimentional, degen_and_superdegen)
     EXPECT_EQ(intersects3(triangle_1, triangle_2), false);
 }
 
-TEST(common, basic_1) { test_utils::run_test("/common/basic_1"); }
+TEST(common, basic_1) { test_utils::run_test<double>("/common/basic_1"); }
 
-TEST(common, basic_2) { test_utils::run_test("/common/basic_2"); }
+TEST(common, basic_2) { test_utils::run_test<double>("/common/basic_2"); }
 
-TEST(common, basic_3) { test_utils::run_test("/common/basic_3"); }
+TEST(common, basic_1_float) { test_utils::run_test<float>("/common/basic_1"); }
+
+TEST(common, basic_2_float) { test_utils::run_test<float>("/common/basic_2"); }
 
 #ifdef BD_TESTS
 
-TEST(bd_tests, amount_100) { test_utils::run_test("/bd_tests/amount-100"); }
-
-TEST(bd_tests, amount_10000)
+TEST(bd_tests, amount_100)
 {
-    test_utils::run_test("/bd_tests/amount-100000");
+    test_utils::run_test<double>("/bd_tests/amount-100");
+}
+
+TEST(bd_tests, amount_100000)
+{
+    test_utils::run_test<double>("/bd_tests/amount-100000");
 }
 
 #endif

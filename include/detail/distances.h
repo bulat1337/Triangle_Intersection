@@ -24,7 +24,7 @@ template <typename FltPnt> class Distances
     FltPnt calc_dist(const Point3<FltPnt> &pnt,
                      const Plane3<FltPnt> &plane) const
     {
-        return dot(plane.normal(), pnt) + plane.origin();
+        return static_cast<FltPnt>(dot(plane.normal(), pnt) + plane.origin());
     }
 
   public:

@@ -24,7 +24,7 @@ template <typename FltPnt> class Plane3
     Plane3(const Point3<FltPnt> &pnt_1, const Point3<FltPnt> &pnt_2,
            const Point3<FltPnt> &pnt_3)
         : normal_(cross(pnt_2 - pnt_1, pnt_3 - pnt_1))
-        , origin_(-dot(normal_, pnt_1))
+        , origin_(static_cast<FltPnt>(-dot(normal_, pnt_1)))
     {}
 
     const Vec3<FltPnt> &normal() const { return normal_; }

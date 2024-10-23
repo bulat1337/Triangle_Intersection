@@ -38,7 +38,8 @@ enum class status_t
 {
     all_good,
     invalid_amount,
-    invalid_coordinate
+    invalid_coordinate,
+	invalid_open
 };
 
 template <typename FltPnt>
@@ -265,9 +266,9 @@ status_t get_triangles(std::istream &in, LabeledTriangles<FltPnt> &triangles)
 }
 
 template <typename FltPnt>
-[[nodiscard]] double calc_cell_size(const LabeledTriangles<FltPnt> &triangles)
+[[nodiscard]] FltPnt calc_cell_size(const LabeledTriangles<FltPnt> &triangles)
 {
-    double all_sides_length = 0;
+    FltPnt all_sides_length = 0;
 
     for (const auto &triangle : triangles)
     {
@@ -284,8 +285,9 @@ template <typename FltPnt>
         all_sides_length += side_3.sq_length();
     }
 
-    double cell_size = detail::cell_size_coeff *
-                       std::sqrt((all_sides_length / (triangles.size() * 3)));
+    FltPnt cell_size = static_cast<FltPnt>(
+        detail::cell_size_coeff *
+        std::sqrt((all_sides_length / (triangles.size() * 3))));
     LOG("Calculated cell size: {}\n", cell_size);
 
     return cell_size;
@@ -350,6 +352,9 @@ bool check_status(status_t status)
         case status_t::invalid_coordinate:
             std::cerr << "ERROR: Please enter floating point as the triangle "
                          "coordinate\n";
+            break;
+		case status_t::invalid_open:
+            std::cerr << "ERROR: Can not open file\n";
             break;
         default:
             std::cerr << "ERROR: Unknown\n";

@@ -95,19 +95,19 @@ inline Vec3<FltPnt> operator*(const Vec3<FltPnt> &lhs, const Vec3<FltPnt> &rhs)
 }
 
 template <typename FltPnt>
-inline Vec3<FltPnt> operator*(const Vec3<FltPnt> &lhs, double scalar)
+inline Vec3<FltPnt> operator*(const Vec3<FltPnt> &lhs, FltPnt scalar)
 {
     return Vec3(lhs.x * scalar, lhs.y * scalar, lhs.z * scalar);
 }
 
 template <typename FltPnt>
-inline Vec3<FltPnt> operator*(double scalar, const Vec3<FltPnt> &vec)
+inline Vec3<FltPnt> operator*(FltPnt scalar, const Vec3<FltPnt> &vec)
 {
     return vec * scalar;
 }
 
 template <typename FltPnt>
-inline Vec3<FltPnt> operator/(const Vec3<FltPnt> &vec, double scalar)
+inline Vec3<FltPnt> operator/(const Vec3<FltPnt> &vec, FltPnt scalar)
 {
     return vec * (1 / scalar);
 }
@@ -216,19 +216,19 @@ inline Vec2<FltPnt> operator*(const Vec2<FltPnt> &lhs, const Vec2<FltPnt> &rhs)
 }
 
 template <typename FltPnt>
-inline Vec2<FltPnt> operator*(const Vec2<FltPnt> &lhs, double scalar)
+inline Vec2<FltPnt> operator*(const Vec2<FltPnt> &lhs, FltPnt scalar)
 {
     return Vec2(lhs.x * scalar, lhs.y * scalar);
 }
 
 template <typename FltPnt>
-inline Vec2<FltPnt> operator*(double scalar, const Vec2<FltPnt> &vec)
+inline Vec2<FltPnt> operator*(FltPnt scalar, const Vec2<FltPnt> &vec)
 {
     return vec * scalar;
 }
 
 template <typename FltPnt>
-inline Vec2<FltPnt> operator/(const Vec2<FltPnt> &vec, double scalar)
+inline Vec2<FltPnt> operator/(const Vec2<FltPnt> &vec, FltPnt scalar)
 {
     return vec * (1 / scalar);
 }

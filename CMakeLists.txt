@@ -4,7 +4,6 @@ project(Main)
 
 enable_testing()
 add_subdirectory(unit_tests/)
-add_subdirectory(${CMAKE_SOURCE_DIR}/unit_tests/test_utils)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)

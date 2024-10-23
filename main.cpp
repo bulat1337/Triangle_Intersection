@@ -10,17 +10,17 @@ int main()
     t_inter::status_t status = t_inter::status_t::all_good;
 
     MSG("Getting triangles\n");
-    t_inter::LabeledTriangles<double> triangles;
+    t_inter::LabeledTriangles<float> triangles;
     status = t_inter::get_triangles(std::cin, triangles);
     if (t_inter::check_status(status))
         return 0;
 
     MSG("Calculating cell_size\n");
-    double cell_size = t_inter::calc_cell_size(triangles);
+    float cell_size = t_inter::calc_cell_size(triangles);
 
     LOG("Cell size: {}\n", cell_size);
 
-    t_inter::Grid<double> grid(cell_size);
+    t_inter::Grid<float> grid(cell_size);
 
     MSG("Inserting triangles in the grid\n");
     grid.insert_all(triangles);
