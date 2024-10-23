@@ -1,6 +1,12 @@
 #ifndef INTERVAL_H
 #define INTERVAL_H
 
+namespace t_inter
+{
+
+namespace detail
+{
+
 class Interval
 {
   private:
@@ -23,5 +29,9 @@ class Interval
 
     void set_max(double value) { max_ = value; }
 };
+
+}; // namespace detail
+
+}; // namespace t_inter
 
 #endif

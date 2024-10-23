@@ -3,6 +3,12 @@
 
 #include "vec.h"
 
+namespace t_inter
+{
+
+namespace detail
+{
+
 template <typename FltPnt> class Plane3
 {
   private:
@@ -24,5 +30,9 @@ template <typename FltPnt> class Plane3
     const Vec3<FltPnt> &normal() const { return normal_; }
     FltPnt origin() const { return origin_; }
 };
+
+}; // namespace detail
+
+}; // namespace t_inter
 
 #endif // PLANE_H

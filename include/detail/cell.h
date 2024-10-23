@@ -1,6 +1,12 @@
 #ifndef CELL_H
 #define CELL_H
 
+namespace t_inter
+{
+
+namespace detail
+{
+
 struct Cell
 {
     long long x = 0;
@@ -20,5 +26,9 @@ struct Cell
         return x == other.x && y == other.y && z == other.z;
     }
 };
+
+}; // namespace detail
+
+}; // namespace t_inter
 
 #endif

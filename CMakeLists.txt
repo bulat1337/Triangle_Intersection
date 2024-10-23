@@ -86,6 +86,7 @@ set(DEBUG_COMPILE_OPTIONS
 add_executable(intersect.x ./main.cpp)
 target_include_directories(intersect.x PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/include
+	${CMAKE_CURRENT_SOURCE_DIR}/include/detail
 	${CMAKE_CURRENT_SOURCE_DIR}/utils/include)
 
 if(ENABLE_LOGGING)

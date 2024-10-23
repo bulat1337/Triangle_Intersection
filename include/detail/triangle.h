@@ -12,6 +12,12 @@
 #include "utils.h"     // for sign, cmp_double, Axis, get_max_axis
 #include "vec.h"       // for Point3, Vec3, operator-, Vec2, dot, operator+
 
+namespace t_inter
+{
+
+namespace detail
+{
+
 template <typename Point> class Triangle_Base
 {
   protected:
@@ -245,5 +251,9 @@ class Triangle2 : public Triangle_Base<Point2<FltPnt>>
         return true;
     }
 };
+
+}; // namespace detail
+
+}; // namespace t_inter
 
 #endif // TRIANGLE_H

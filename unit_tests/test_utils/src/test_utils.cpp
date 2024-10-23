@@ -7,7 +7,7 @@
 #include <stddef.h>      // for size_t
 #include <string>        // for allocator, char_traits, basic_string, string
 
-#include "multi_inter.h" // for Grid, calc_cell_size, get_triangles, inter...
+#include "t_inter.h" // for Grid, calc_cell_size, get_triangles, inter...
 
 namespace
 {
@@ -20,19 +20,19 @@ std::string get_result(const std::string &file_name)
 
     test_data.open(file_name);
 
-    multi_inter::LabeledTriangles<double> triangles;
+    t_inter::LabeledTriangles<double> triangles;
 
-    multi_inter::get_triangles(test_data, triangles);
+    t_inter::get_triangles(test_data, triangles);
 
-    double cell_size = multi_inter::calc_cell_size(triangles);
+    double cell_size = t_inter::calc_cell_size(triangles);
 
-    multi_inter::Grid<double> grid(cell_size);
+    t_inter::Grid<double> grid(cell_size);
 
     grid.insert_all(triangles);
 
     std::set<size_t> intersecting_ids;
 
-    multi_inter::intersect_close_trinagles(intersecting_ids, triangles, grid);
+    t_inter::intersect_close_trinagles(intersecting_ids, triangles, grid);
 
     std::string result;
 

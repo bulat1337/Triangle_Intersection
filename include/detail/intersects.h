@@ -14,6 +14,12 @@
 #include "utils.h"     // for Axis, get_max_axis
 #include "vec.h"       // for Vec3, Point2, cross
 
+namespace t_inter
+{
+
+namespace detail
+{
+
 template <typename FltPnt>
 Triangle2<FltPnt> project(const Triangle3<FltPnt> &triangle,
                           utils::Axis max_normal_axis)
@@ -171,5 +177,9 @@ bool intersects3(const Triangle3<FltPnt> &lhs, const Triangle3<FltPnt> &rhs)
 
     return true;
 }
+
+}; // namespace detail
+
+}; // namespace t_inter
 
 #endif // INTERSECTION_H

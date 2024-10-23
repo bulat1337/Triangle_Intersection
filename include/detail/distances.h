@@ -7,6 +7,12 @@
 #include "utils.h" // for fp_tolerance
 #include "vec.h"   // for dot, Point3
 
+namespace t_inter
+{
+
+namespace detail
+{
+
 template <typename FltPnt> class Distances
 {
   public:
@@ -49,5 +55,9 @@ template <typename FltPnt> class Distances
                 std::fabs(third) < utils::fp_tolerance);
     }
 };
+
+}; // namespace detail
+
+}; // namespace t_inter
 
 #endif // DISTANCES_H

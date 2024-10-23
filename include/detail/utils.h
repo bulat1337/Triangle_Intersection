@@ -6,6 +6,12 @@
 
 #include "vec.h" // for Vec3
 
+namespace t_inter
+{
+
+namespace detail
+{
+
 namespace utils
 {
 const double fp_tolerance = 1e-8;
@@ -61,5 +67,9 @@ template <typename FltPnt> Axis get_max_axis(const Vec3<FltPnt> &vec)
     }
 }
 } // namespace utils
+
+}; // namespace detail
+
+}; // namespace t_inter
 
 #endif // UTILS_H

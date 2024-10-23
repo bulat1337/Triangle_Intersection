@@ -10,6 +10,12 @@
 #include "utils.h" // for cmp_double
 #include "vec.h"   // for dot, Vec2, operator-, operator<<, Point2
 
+namespace t_inter
+{
+
+namespace detail
+{
+
 template <typename FltPnt> class Segment2
 {
   private:
@@ -126,5 +132,9 @@ inline std::ostream &operator<<(std::ostream &out, const Segment2<FltPnt> &sgm)
 
     return out;
 }
+
+}; // namespace detail
+
+}; // namespace t_inter
 
 #endif // SEGMENT_H

@@ -6,6 +6,12 @@
 #include "triangle.h" // for Triangle3
 #include "vec.h"
 
+namespace t_inter
+{
+
+namespace detail
+{
+
 template <typename FltPnt> class Bounding_box
 {
   private:
@@ -38,5 +44,9 @@ template <typename FltPnt> class Bounding_box
     const Point3<FltPnt> &min() const { return min_; }
     const Point3<FltPnt> &max() const { return max_; }
 };
+
+}; // namespace detail
+
+}; // namespace t_inter
 
 #endif // BOUNDING_BOX_H

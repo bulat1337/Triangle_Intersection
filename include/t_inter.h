@@ -1,35 +1,37 @@
 #ifndef SPATIAL_HASH_H
 #define SPATIAL_HASH_H
 
-#include <algorithm>     // for max, min
-#include <cmath>         // for floor, sqrt
-#include <functional>    // for hash, __scalar_hash
-#include <iostream>      // for cerr, cout
-#include <istream>       // for istream
+#include <algorithm>  // for max, min
+#include <cmath>      // for floor, sqrt
+#include <functional> // for hash, __scalar_hash
+#include <iostream>   // for cerr, cout
+#include <istream>    // for istream
+#include <limits>
 #include <set>           // for set
 #include <stddef.h>      // for size_t
 #include <unordered_map> // for operator==, unordered_map, __hash_map_cons...
 #include <unordered_set> // for unordered_set
 #include <utility>       // for pair
 #include <vector>        // for vector
-#include <limits>
 
 #include "bounding_box.h" // for Bounding_box
-#include "cell.h"         // for Cell
+#include "cell.h"         // for t_inter::detail::Cell
 #include "intersects.h"   // for intersects3
 #include "log.h"          // for LOG, MSG
-#include "triangle.h"     // for Triangle3
-#include "vec.h"          // for Vec3, operator-, operator>>, Point3
+#include "triangle.h"     // for t_inter::detail::Triangle3
+#include "vec.h" // for t_inter::detail::Vec3, operator-, operator>>, t_inter::detail::Point3
 
-namespace multi_inter
+namespace t_inter
 {
 
 template <typename FltPnt>
-Cell discretize(const Point3<FltPnt> &point, double cell_size)
+t_inter::detail::Cell discretize(const t_inter::detail::Point3<FltPnt> &point,
+                                 double cell_size)
 {
-    return Cell(static_cast<long long>(std::floor(point.x() / cell_size)),
-                static_cast<long long>(std::floor(point.y() / cell_size)),
-                static_cast<long long>(std::floor(point.z() / cell_size)));
+    return t_inter::detail::Cell(
+        static_cast<long long>(std::floor(point.x() / cell_size)),
+        static_cast<long long>(std::floor(point.y() / cell_size)),
+        static_cast<long long>(std::floor(point.z() / cell_size)));
 }
 
 enum class status_t
@@ -40,7 +42,7 @@ enum class status_t
 };
 
 template <typename FltPnt>
-using LabeledTriangle = std::pair<Triangle3<FltPnt>, size_t>;
+using LabeledTriangle = std::pair<t_inter::detail::Triangle3<FltPnt>, size_t>;
 
 template <typename FltPnt>
 using LabeledTriangles = std::vector<LabeledTriangle<FltPnt>>;
@@ -48,39 +50,39 @@ using LabeledTriangles = std::vector<LabeledTriangle<FltPnt>>;
 struct Hash_Cell
 {
   private:
-	const long long x_coeff = 73856093;
-	const long long y_coeff = 19349663;
-	const long long z_coeff = 83492791;
+    const long long x_coeff = 73856093;
+    const long long y_coeff = 19349663;
+    const long long z_coeff = 83492791;
 
   public:
-    long long operator()(const Cell &key) const
+    long long operator()(const t_inter::detail::Cell &key) const
     {
-		long long transformed_x =
-			std::numeric_limits<const long long>::max() / x_coeff > key.x
-			? key.x * x_coeff
-			: key.x;
+        long long transformed_x =
+            std::numeric_limits<const long long>::max() / x_coeff > key.x
+                ? key.x * x_coeff
+                : key.x;
 
-		long long transformed_y =
-			std::numeric_limits<const long long>::max() / y_coeff > key.y
-			? key.y * y_coeff
-			: key.y;
+        long long transformed_y =
+            std::numeric_limits<const long long>::max() / y_coeff > key.y
+                ? key.y * y_coeff
+                : key.y;
 
-		long long transformed_z =
-			std::numeric_limits<const long long>::max() / z_coeff > key.z
-			? key.z * z_coeff
-			: key.z;
+        long long transformed_z =
+            std::numeric_limits<const long long>::max() / z_coeff > key.z
+                ? key.z * z_coeff
+                : key.z;
 
-        return (transformed_x ^
-               	transformed_y ^
-               	transformed_z);
+        return (transformed_x ^ transformed_y ^ transformed_z);
     }
 };
 
 template <typename FltPnt> class Grid
 {
   private:
-    std::unordered_map<Cell, std::vector<std::pair<Triangle3<FltPnt>, size_t>>,
-                       Hash_Cell>
+    std::unordered_map<
+        t_inter::detail::Cell,
+        std::vector<std::pair<t_inter::detail::Triangle3<FltPnt>, size_t>>,
+        Hash_Cell>
         cells_;
 
     double cell_size_ = 0.0;
@@ -101,7 +103,7 @@ template <typename FltPnt> class Grid
 
     void insert(LabeledTriangle<FltPnt> &trgl)
     {
-        Bounding_box bounding_box(trgl.first);
+        t_inter::detail::Bounding_box bounding_box(trgl.first);
 
         LOG("Bounding box is from ({}, {}, {}) to ({}, {}, {})\n",
             bounding_box.min().x(), bounding_box.min().y(),
@@ -122,18 +124,21 @@ template <typename FltPnt> class Grid
                      z <= trgl.first.max_cell().z; ++z)
                 {
                     LOG("({}, {}, {})\n", x, y, z);
-                    Cell cell_key(x, y, z);
+                    t_inter::detail::Cell cell_key(x, y, z);
                     cells_[cell_key].push_back(trgl);
                 }
             }
         }
     }
 
-    auto find(const Cell &pnt) const { return cells_.find(pnt); }
+    auto find(const t_inter::detail::Cell &pnt) const
+    {
+        return cells_.find(pnt);
+    }
 
     auto end() const { return cells_.end(); }
 
-    auto at(const Cell &pnt) const { return cells_.at(pnt); }
+    auto at(const t_inter::detail::Cell &pnt) const { return cells_.at(pnt); }
 
     void dump_cells() const
     {
@@ -147,7 +152,8 @@ template <typename FltPnt> class Grid
     }
 };
 
-// secondary
+namespace detail
+{
 
 const double cell_size_coeff = 2.0;
 
@@ -197,7 +203,7 @@ close_triangles(const LabeledTriangle<FltPnt> &triangle,
             for (long long z = triangle.first.min_cell().z;
                  z <= triangle.first.max_cell().z; ++z)
             {
-                Cell cell_key(x, y, z);
+                t_inter::detail::Cell cell_key(x, y, z);
 
                 if (grid.find(cell_key) != grid.end())
                 {
@@ -223,7 +229,7 @@ close_triangles(const LabeledTriangle<FltPnt> &triangle,
     return potential_collisions;
 }
 
-//
+};
 
 template <typename FltPnt>
 status_t get_triangles(std::istream &in, LabeledTriangles<FltPnt> &triangles)
@@ -242,16 +248,16 @@ status_t get_triangles(std::istream &in, LabeledTriangles<FltPnt> &triangles)
 
     for (size_t triangle_id = 0; triangle_id < triangle_amount; ++triangle_id)
     {
-        Point3<FltPnt> pnt_1;
-        Point3<FltPnt> pnt_2;
-        Point3<FltPnt> pnt_3;
+        t_inter::detail::Point3<FltPnt> pnt_1;
+        t_inter::detail::Point3<FltPnt> pnt_2;
+        t_inter::detail::Point3<FltPnt> pnt_3;
 
         if (!(in >> pnt_1 >> pnt_2 >> pnt_3))
         {
             return status_t::invalid_coordinate;
         }
 
-        Triangle3<FltPnt> triangle(pnt_1, pnt_2, pnt_3);
+        t_inter::detail::Triangle3<FltPnt> triangle(pnt_1, pnt_2, pnt_3);
 
         triangles.push_back({triangle, triangle_id});
     }
@@ -266,9 +272,12 @@ template <typename FltPnt>
 
     for (const auto &triangle : triangles)
     {
-        Vec3 side_1 = triangle.first.pnt_2() - triangle.first.pnt_1();
-        Vec3 side_2 = triangle.first.pnt_3() - triangle.first.pnt_2();
-        Vec3 side_3 = triangle.first.pnt_1() - triangle.first.pnt_3();
+        t_inter::detail::Vec3 side_1 =
+            triangle.first.pnt_2() - triangle.first.pnt_1();
+        t_inter::detail::Vec3 side_2 =
+            triangle.first.pnt_3() - triangle.first.pnt_2();
+        t_inter::detail::Vec3 side_3 =
+            triangle.first.pnt_1() - triangle.first.pnt_3();
 
         // sq_length
         all_sides_length += side_1.sq_length();
@@ -276,7 +285,7 @@ template <typename FltPnt>
         all_sides_length += side_3.sq_length();
     }
 
-    double cell_size = cell_size_coeff *
+    double cell_size = detail::cell_size_coeff *
                        std::sqrt((all_sides_length / (triangles.size() * 3)));
     LOG("Calculated cell size: {}\n", cell_size);
 
@@ -288,11 +297,11 @@ void intersect_close_trinagles(std::set<size_t> &intersecting_ids,
                                const LabeledTriangles<FltPnt> &triangles,
                                const Grid<FltPnt> &grid)
 {
-    #ifdef DEBUG
+#ifdef DEBUG
     size_t intersection_check_counter = 0;
-    #endif
+#endif
 
-    CollisionSet added_potentials;
+    detail::CollisionSet added_potentials;
 
     for (const auto &triangle : triangles)
     {
@@ -303,9 +312,9 @@ void intersect_close_trinagles(std::set<size_t> &intersecting_ids,
 
         for (const auto &potential : potential_collisions)
         {
-            #ifdef DEBUG
+#ifdef DEBUG
             ++intersection_check_counter;
-            #endif
+#endif
 
             LOG("Checking the intersecton of {} and {}\n", triangle.second,
                 potential.second);
@@ -321,9 +330,9 @@ void intersect_close_trinagles(std::set<size_t> &intersecting_ids,
         }
     }
 
-    #ifdef DEBUG
+#ifdef DEBUG
     LOG("Intersection check amount: {}\n", intersection_check_counter);
-    #endif
+#endif
 }
 
 bool check_status(status_t status)
@@ -350,6 +359,6 @@ bool check_status(status_t status)
     return true;
 }
 
-}; // namespace multi_inter
+}; // namespace t_inter
 
 #endif
