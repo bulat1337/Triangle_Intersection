@@ -77,6 +77,7 @@ set(DEBUG_COMPILE_OPTIONS
 	-fPIE
 	-Werror=vla
 	-Wno-pre-c++17-compat
+	-Wno-pre-c++20-compat
 	-fsanitize=address,alignment,bool,bounds,enum,float-cast-overflow,float-divide-by-zero,integer-divide-by-zero,nonnull-attribute,null,return,returns-nonnull-attribute,shift,signed-integer-overflow,undefined,unreachable,vla-bound,vptr
 )
 

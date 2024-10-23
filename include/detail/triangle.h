@@ -76,7 +76,13 @@ std::istream &operator>>(std::istream &is, Triangle_Base<Point> &triangle)
 template <typename FltPnt>
 class Triangle3 : public Triangle_Base<Point3<FltPnt>>
 {
+  public:
+	using Triangle_Base<Point3<FltPnt>>::pnt_1;
+    using Triangle_Base<Point3<FltPnt>>::pnt_2;
+    using Triangle_Base<Point3<FltPnt>>::pnt_3;
+
   private:
+
     Cell min_cell_;
     Cell max_cell_;
 
@@ -145,16 +151,16 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
     }
 
   public:
-    Triangle3(const Point3<FltPnt> &pnt_1, const Point3<FltPnt> &pnt_2,
-              const Point3<FltPnt> &pnt_3)
+    Triangle3(const Point3<FltPnt> &_pnt_1, const Point3<FltPnt> &_pnt_2,
+              const Point3<FltPnt> &_pnt_3)
     {
-        std::array<Point3<FltPnt>, 3> points = {pnt_1, pnt_2, pnt_3};
+        std::array<Point3<FltPnt>, 3> points = {_pnt_1, _pnt_2, _pnt_3};
 
         sort_vertices(points);
 
-        this->pnt_1 = points[0];
-        this->pnt_2 = points[1];
-        this->pnt_3 = points[2];
+        pnt_1 = points[0];
+        pnt_2 = points[1];
+        pnt_3 = points[2];
     }
 
     void distance_sort(Distances<FltPnt> &dists)
@@ -171,16 +177,16 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
             std::swap(dists.first, dists.second);
             std::swap(dists.second, dists.third);
 
-            std::swap(this->pnt_1, this->pnt_2);
-            std::swap(this->pnt_2, this->pnt_3);
+            std::swap(pnt_1, pnt_2);
+            std::swap(pnt_2, pnt_3);
         }
         else
         {
             std::swap(dists.second, dists.third);
             std::swap(dists.first, dists.second);
 
-            std::swap(this->pnt_2, this->pnt_3);
-            std::swap(this->pnt_1, this->pnt_2);
+            std::swap(pnt_2, pnt_3);
+            std::swap(pnt_1, pnt_2);
         }
     }
 
@@ -194,6 +200,11 @@ template <typename FltPnt>
 class Triangle2 : public Triangle_Base<Point2<FltPnt>>
 {
   public:
+	using Triangle_Base<Point2<FltPnt>>::pnt_1;
+    using Triangle_Base<Point2<FltPnt>>::pnt_2;
+    using Triangle_Base<Point2<FltPnt>>::pnt_3;
+
+  public:
     Triangle2(const Point2<FltPnt> &pnt_1, const Point2<FltPnt> &pnt_2,
               const Point2<FltPnt> &pnt_3)
         : Triangle_Base<Point2<FltPnt>>(pnt_1, pnt_2, pnt_3)
@@ -201,10 +212,10 @@ class Triangle2 : public Triangle_Base<Point2<FltPnt>>
 
     bool contains(const Triangle2 &other) const
     {
-        Vec2 a_to_pnt = other.pnt_1 - this->pnt_1;
+        Vec2 a_to_pnt = other.pnt_1 - pnt_1;
 
-        Vec2 a_to_b = this->pnt_2 - this->pnt_1;
-        Vec2 a_to_c = this->pnt_3 - this->pnt_1;
+        Vec2 a_to_b = pnt_2 - pnt_1;
+        Vec2 a_to_c = pnt_3 - pnt_1;
 
         double ab_norm_proj = dot(a_to_pnt, a_to_b.clockwise_normal());
         LOG("ab_norm_proj = {}\n", ab_norm_proj);
@@ -221,8 +232,8 @@ class Triangle2 : public Triangle_Base<Point2<FltPnt>>
             return false;
         }
 
-        Vec2 b_to_c = this->pnt_3 - this->pnt_2;
-        Vec2 b_to_pnt = other.pnt_1 - this->pnt_2;
+        Vec2 b_to_c = pnt_3 - pnt_2;
+        Vec2 b_to_pnt = other.pnt_1 - pnt_2;
 
         double bc_norm_proj = dot(b_to_pnt, b_to_c.clockwise_normal());
 
