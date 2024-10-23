@@ -38,10 +38,10 @@ template <typename T> std::string get_result(const std::string &file_name)
 
     test_data.open(file_name);
 
-	if (!test_data.is_open()) status = t_inter::status_t::invalid_open;
-	if (t_inter::check_status(status))
-	return std::string();
-
+    if (!test_data.is_open())
+        status = t_inter::status_t::invalid_open;
+    if (t_inter::check_status(status))
+        return std::string();
 
     MSG("Getting triangles\n");
     t_inter::LabeledTriangles<T> triangles;

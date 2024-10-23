@@ -39,7 +39,7 @@ enum class status_t
     all_good,
     invalid_amount,
     invalid_coordinate,
-	invalid_open
+    invalid_open
 };
 
 template <typename FltPnt>
@@ -80,10 +80,8 @@ struct Hash_Cell
 template <typename FltPnt> class Grid
 {
   private:
-    std::unordered_map<
-        t_inter::detail::Cell,
-        LabeledTriangles<FltPnt>,
-        Hash_Cell>
+    std::unordered_map<t_inter::detail::Cell, LabeledTriangles<FltPnt>,
+                       Hash_Cell>
         cells_;
 
     double cell_size_ = 0.0;
@@ -183,17 +181,20 @@ bool added_potentials_contains(const CollisionSet &added_potentials, size_t a,
 }
 
 template <typename FltPnt>
-void add_potential_collisions(const LabeledTriangles<FltPnt> &potential_triangles,
-                              const LabeledTriangle<FltPnt>& triangle,
-                              LabeledTriangles<FltPnt>& potential_collisions,
-                              CollisionSet& added_potentials)
+void add_potential_collisions(
+    const LabeledTriangles<FltPnt> &potential_triangles,
+    const LabeledTriangle<FltPnt> &triangle,
+    LabeledTriangles<FltPnt> &potential_collisions,
+    CollisionSet &added_potentials)
 {
     for (const auto &potential_triangle : potential_triangles)
     {
-        if (!added_potentials_contains(added_potentials, triangle.second, potential_triangle.second))
+        if (!added_potentials_contains(added_potentials, triangle.second,
+                                       potential_triangle.second))
         {
             potential_collisions.push_back(potential_triangle);
-            add_checked_collision(added_potentials, triangle.second, potential_triangle.second);
+            add_checked_collision(added_potentials, triangle.second,
+                                  potential_triangle.second);
         }
     }
 }
@@ -206,9 +207,9 @@ close_triangles(const LabeledTriangle<FltPnt> &triangle,
     LabeledTriangles<FltPnt> potential_collisions;
     add_checked_collision(added_potentials, triangle.second, triangle.second);
 
-	#ifdef ENABLE_LOGGING
+#ifdef ENABLE_LOGGING
     grid.dump_cells();
-	#endif
+#endif
 
     for (long long x = triangle.first.min_cell().x;
          x <= triangle.first.max_cell().x; ++x)
@@ -221,14 +222,14 @@ close_triangles(const LabeledTriangle<FltPnt> &triangle,
             {
                 t_inter::detail::Cell cell_key(x, y, z);
 
-				auto it = grid.find(cell_key);
+                auto it = grid.find(cell_key);
 
-                if (it == grid.end()) continue;
+                if (it == grid.end())
+                    continue;
 
-				add_potential_collisions(	it->second,
-											triangle,
-											potential_collisions,
-											added_potentials);
+                add_potential_collisions(it->second, triangle,
+                                         potential_collisions,
+                                         added_potentials);
             }
         }
     }
@@ -286,7 +287,6 @@ template <typename FltPnt>
         t_inter::detail::Vec3 side_3 =
             triangle.first.pnt_1 - triangle.first.pnt_3;
 
-        // sq_length
         all_sides_length += side_1.sq_length();
         all_sides_length += side_2.sq_length();
         all_sides_length += side_3.sq_length();
@@ -306,7 +306,7 @@ void intersect_close_trinagles(std::set<size_t> &intersecting_ids,
                                const Grid<FltPnt> &grid)
 {
 #ifdef DEBUG
-    [[maybe_unused]]size_t intersection_check_counter = 0;
+    [[maybe_unused]] size_t intersection_check_counter = 0;
 #endif
 
     detail::CollisionSet added_potentials;
@@ -360,7 +360,7 @@ bool check_status(status_t status)
             std::cerr << "ERROR: Please enter floating point as the triangle "
                          "coordinate\n";
             break;
-		case status_t::invalid_open:
+        case status_t::invalid_open:
             std::cerr << "ERROR: Can not open file\n";
             break;
         default:

@@ -77,12 +77,11 @@ template <typename FltPnt>
 class Triangle3 : public Triangle_Base<Point3<FltPnt>>
 {
   public:
-	using Triangle_Base<Point3<FltPnt>>::pnt_1;
+    using Triangle_Base<Point3<FltPnt>>::pnt_1;
     using Triangle_Base<Point3<FltPnt>>::pnt_2;
     using Triangle_Base<Point3<FltPnt>>::pnt_3;
 
   private:
-
     Cell min_cell_;
     Cell max_cell_;
 
@@ -200,7 +199,7 @@ template <typename FltPnt>
 class Triangle2 : public Triangle_Base<Point2<FltPnt>>
 {
   public:
-	using Triangle_Base<Point2<FltPnt>>::pnt_1;
+    using Triangle_Base<Point2<FltPnt>>::pnt_1;
     using Triangle_Base<Point2<FltPnt>>::pnt_2;
     using Triangle_Base<Point2<FltPnt>>::pnt_3;
 
