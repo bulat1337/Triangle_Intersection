@@ -7,9 +7,6 @@
 namespace t_inter
 {
 
-namespace detail
-{
-
 // ------------------ Vec3 ------------------
 
 template <typename FltPnt> class Vec3
@@ -247,8 +244,6 @@ inline FltPnt dot(const Vec2<FltPnt> &lhs, const Vec2<FltPnt> &rhs)
 }
 
 template <typename FltPnt> using Point2 = Vec2<FltPnt>;
-
-}; // namespace detail
 
 }; // namespace t_inter
 

@@ -18,14 +18,14 @@
 #include "cell.h"         // for t_inter::detail::Cell
 #include "intersects.h"   // for intersects3
 #include "log.h"          // for LOG, MSG
-#include "triangle.h"     // for t_inter::detail::Triangle3
-#include "vec.h" // for t_inter::detail::Vec3, operator-, operator>>, t_inter::detail::Point3
+#include "triangle.h"     // for t_inter::Triangle3
+#include "vec.h" // for t_inter::Vec3, operator-, operator>>, t_inter::Point3
 
 namespace t_inter
 {
 
 template <typename FltPnt>
-t_inter::detail::Cell discretize(const t_inter::detail::Point3<FltPnt> &point,
+t_inter::detail::Cell discretize(const t_inter::Point3<FltPnt> &point,
                                  double cell_size)
 {
     return t_inter::detail::Cell(
@@ -43,7 +43,7 @@ enum class status_t
 };
 
 template <typename FltPnt>
-using LabeledTriangle = std::pair<t_inter::detail::Triangle3<FltPnt>, size_t>;
+using LabeledTriangle = std::pair<t_inter::Triangle3<FltPnt>, size_t>;
 
 template <typename FltPnt>
 using LabeledTriangles = std::vector<LabeledTriangle<FltPnt>>;
@@ -111,22 +111,19 @@ template <typename FltPnt> class Grid
         trgl.first.set_min_cell(discretize(bounding_box.min(), cell_size_));
         trgl.first.set_max_cell(discretize(bounding_box.max(), cell_size_));
 
+		const detail::Cell& cmin = trgl.first.min_cell();
+		const detail::Cell& cmax = trgl.first.max_cell();
+
         MSG("Bounding box is contained in cells:\n");
-        for (long long x = trgl.first.min_cell().x;
-             x <= trgl.first.max_cell().x; ++x)
-        {
-            for (long long y = trgl.first.min_cell().y;
-                 y <= trgl.first.max_cell().y; ++y)
-            {
-                for (long long z = trgl.first.min_cell().z;
-                     z <= trgl.first.max_cell().z; ++z)
+
+        for (			long long x = cmin.x; x <= cmax.x; ++x)
+			for (		long long y = cmin.y; y <= cmax.y; ++y)
+            	for (	long long z = cmin.z; z <= cmax.z; ++z)
                 {
                     LOG("({}, {}, {})\n", x, y, z);
                     t_inter::detail::Cell cell_key(x, y, z);
                     cells_[cell_key].push_back(trgl);
                 }
-            }
-        }
     }
 
     auto find(const t_inter::detail::Cell &pnt) const
@@ -256,16 +253,16 @@ status_t get_triangles(std::istream &in, LabeledTriangles<FltPnt> &triangles)
 
     for (size_t triangle_id = 0; triangle_id < triangle_amount; ++triangle_id)
     {
-        t_inter::detail::Point3<FltPnt> pnt_1;
-        t_inter::detail::Point3<FltPnt> pnt_2;
-        t_inter::detail::Point3<FltPnt> pnt_3;
+        t_inter::Point3<FltPnt> pnt_1;
+        t_inter::Point3<FltPnt> pnt_2;
+        t_inter::Point3<FltPnt> pnt_3;
 
         if (!(in >> pnt_1 >> pnt_2 >> pnt_3))
         {
             return status_t::invalid_coordinate;
         }
 
-        t_inter::detail::Triangle3<FltPnt> triangle(pnt_1, pnt_2, pnt_3);
+        t_inter::Triangle3<FltPnt> triangle(pnt_1, pnt_2, pnt_3);
 
         triangles.push_back({triangle, triangle_id});
     }
@@ -280,11 +277,11 @@ template <typename FltPnt>
 
     for (const auto &triangle : triangles)
     {
-        t_inter::detail::Vec3 side_1 =
+        t_inter::Vec3 side_1 =
             triangle.first.pnt_2 - triangle.first.pnt_1;
-        t_inter::detail::Vec3 side_2 =
+        t_inter::Vec3 side_2 =
             triangle.first.pnt_3 - triangle.first.pnt_2;
-        t_inter::detail::Vec3 side_3 =
+        t_inter::Vec3 side_3 =
             triangle.first.pnt_1 - triangle.first.pnt_3;
 
         all_sides_length += side_1.sq_length();
@@ -326,7 +323,7 @@ void intersect_close_trinagles(std::set<size_t> &intersecting_ids,
 
             LOG("Checking the intersecton of {} and {}\n", triangle.second,
                 potential.second);
-            if (intersects3(triangle.first, potential.first))
+            if (detail::intersects3(triangle.first, potential.first))
             {
                 LOG("YES: {} intersects {}\n\n", triangle.second,
                     potential.second);

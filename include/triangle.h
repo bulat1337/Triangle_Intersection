@@ -15,9 +15,6 @@
 namespace t_inter
 {
 
-namespace detail
-{
-
 template <typename Point> class Triangle_Base
 {
   public:
@@ -82,14 +79,14 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
     using Triangle_Base<Point3<FltPnt>>::pnt_3;
 
   private:
-    Cell min_cell_;
-    Cell max_cell_;
+    detail::Cell min_cell_;
+    detail::Cell max_cell_;
 
   private:
     void sort_vertices(std::array<Point3<FltPnt>, 3> &points)
     {
         Vec3 normal = cross(points[1] - points[0], points[2] - points[0]);
-        if (utils::cmp_double(normal.sq_length(), 0) != 0)
+        if (detail::utils::cmp_double(normal.sq_length(), 0) != 0)
             normal = unit_vector(normal);
 
         MSG("Normal vector is null-sized\n");
@@ -97,11 +94,11 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
         Point3<FltPnt> center =
             (points[0] + points[1] + points[2]) / static_cast<FltPnt>(3.0);
 
-        utils::Axis dominant_axis = utils::get_max_axis(normal);
+        detail::utils::Axis dominant_axis = detail::utils::get_max_axis(normal);
 
         switch (dominant_axis)
         {
-            case utils::Axis::z:
+            case detail::utils::Axis::z:
                 // projecting on XY
                 std::sort(points.begin(), points.end(),
                           [&center](const Point3<FltPnt> &p1,
@@ -114,7 +111,7 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
                               return angle1 < angle2;
                           });
                 break;
-            case utils::Axis::x:
+            case detail::utils::Axis::x:
                 // projecting on YZ
                 std::sort(points.begin(), points.end(),
                           [&center](const Point3<FltPnt> &p1,
@@ -127,7 +124,7 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
                               return angle1 < angle2;
                           });
                 break;
-            case utils::Axis::y:
+            case detail::utils::Axis::y:
                 // projecting on XZ
                 std::sort(points.begin(), points.end(),
                           [&center](const Point3<FltPnt> &p1,
@@ -162,16 +159,16 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
         pnt_3 = points[2];
     }
 
-    void distance_sort(Distances<FltPnt> &dists)
+    void distance_sort(detail::Distances<FltPnt> &dists)
     {
-        if (utils::sign(dists.second) != utils::sign(dists.first) &&
-            utils::sign(dists.second) != utils::sign(dists.third))
+        if (detail::utils::sign(dists.second) != detail::utils::sign(dists.first) &&
+            detail::utils::sign(dists.second) != detail::utils::sign(dists.third))
         {
             MSG("Already sorted\n");
             return;
         }
 
-        if (utils::sign(dists.second) == utils::sign(dists.first))
+        if (detail::utils::sign(dists.second) == detail::utils::sign(dists.first))
         {
             std::swap(dists.first, dists.second);
             std::swap(dists.second, dists.third);
@@ -189,10 +186,10 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
         }
     }
 
-    const Cell &min_cell() const { return min_cell_; }
-    const Cell &max_cell() const { return max_cell_; }
-    void set_min_cell(const Cell &value) { min_cell_ = value; }
-    void set_max_cell(const Cell &value) { max_cell_ = value; }
+    const detail::Cell &min_cell() const { return min_cell_; }
+    const detail::Cell &max_cell() const { return max_cell_; }
+    void set_min_cell(const detail::Cell &value) { min_cell_ = value; }
+    void set_max_cell(const detail::Cell &value) { max_cell_ = value; }
 };
 
 template <typename FltPnt>
@@ -222,8 +219,8 @@ class Triangle2 : public Triangle_Base<Point2<FltPnt>>
         double ac_norm_proj = dot(a_to_pnt, a_to_c.clockwise_normal());
         LOG("ac_norm_proj = {}\n", ab_norm_proj);
 
-        bool ab_proj_sign = utils::cmp_double(ab_norm_proj, 0) > 0;
-        bool ac_proj_sign = utils::cmp_double(ac_norm_proj, 0) > 0;
+        bool ab_proj_sign = detail::utils::cmp_double(ab_norm_proj, 0) > 0;
+        bool ac_proj_sign = detail::utils::cmp_double(ac_norm_proj, 0) > 0;
 
         if (ab_proj_sign == ac_proj_sign)
         {
@@ -236,7 +233,7 @@ class Triangle2 : public Triangle_Base<Point2<FltPnt>>
 
         double bc_norm_proj = dot(b_to_pnt, b_to_c.clockwise_normal());
 
-        bool bc_proj_sign = utils::cmp_double(bc_norm_proj, 0) > 0;
+        bool bc_proj_sign = detail::utils::cmp_double(bc_norm_proj, 0) > 0;
 
         if (bc_proj_sign != ab_proj_sign)
         {
@@ -247,8 +244,6 @@ class Triangle2 : public Triangle_Base<Point2<FltPnt>>
         return true;
     }
 };
-
-}; // namespace detail
 
 }; // namespace t_inter
 
