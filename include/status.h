@@ -12,7 +12,7 @@ enum class status_t
     invalid_amount,
     invalid_coordinate,
     invalid_open,
-	invalid_axis
+    invalid_axis
 };
 
 inline bool check_status(status_t status)
@@ -35,8 +35,9 @@ inline bool check_status(status_t status)
         case status_t::invalid_open:
             std::cerr << "ERROR: Can not open file\n";
             break;
-		case status_t::invalid_axis:
-			std::cerr << "ERROR: Invalid axis. Please check if dimentions are mathing\n";
+        case status_t::invalid_axis:
+            std::cerr << "ERROR: Invalid axis. Please check if dimentions are "
+                         "mathing\n";
             break;
         default:
             std::cerr << "ERROR: Unknown\n";
@@ -46,7 +47,5 @@ inline bool check_status(status_t status)
 }
 
 }; // namespace t_inter
-
-
 
 #endif // STATUS_H

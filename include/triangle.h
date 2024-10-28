@@ -9,9 +9,9 @@
 #include "cell.h"
 #include "distances.h" // for Distances
 #include "log.h"       // for MSG, LOG
-#include "utils.h"     // for sign, cmp_double, Axis, get_max_axis
-#include "vec.h"       // for Point3, Vec3, operator-, Vec2, dot, operator+
 #include "status.h"
+#include "utils.h" // for sign, cmp_double, Axis, get_max_axis
+#include "vec.h"   // for Point3, Vec3, operator-, Vec2, dot, operator+
 
 namespace t_inter
 {
@@ -138,10 +138,10 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
                               return angle1 < angle2;
                           });
                 break;
-			default:
-			{
-				return status_t::invalid_axis;
-			}
+            default:
+            {
+                return status_t::invalid_axis;
+            }
         }
 
         MSG("After sorting:\n");
@@ -150,7 +150,7 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
             LOG("{} {} {}\n", point.x, point.y, point.z);
         }
 
-		return status_t::all_good;
+        return status_t::all_good;
     }
 
   public:
@@ -168,14 +168,17 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
 
     void distance_sort(detail::Distances<FltPnt> &dists)
     {
-        if (detail::utils::sign(dists.second) != detail::utils::sign(dists.first) &&
-            detail::utils::sign(dists.second) != detail::utils::sign(dists.third))
+        if (detail::utils::sign(dists.second) !=
+                detail::utils::sign(dists.first) &&
+            detail::utils::sign(dists.second) !=
+                detail::utils::sign(dists.third))
         {
             MSG("Already sorted\n");
             return;
         }
 
-        if (detail::utils::sign(dists.second) == detail::utils::sign(dists.first))
+        if (detail::utils::sign(dists.second) ==
+            detail::utils::sign(dists.first))
         {
             std::swap(dists.first, dists.second);
             std::swap(dists.second, dists.third);

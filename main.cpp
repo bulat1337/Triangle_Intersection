@@ -1,9 +1,10 @@
-#include <iostream> // for basic_ostream, operator<<, cin, cout
-#include <set>      // for set, __tree_const_iterator
-#include <stddef.h> // for size_t
+#include <stddef.h>   // for size_t
+#include <iostream>   // for basic_ostream, operator<<, cin, cout
+#include <set>        // for set, __tree_const_iterator
 
-#include "log.h"
-#include "t_inter.h" // for Grid, calc_cell_size, get_triangles, inter...
+#include "log.h"      // for MSG, LOG
+#include "status.h"   // for check_status, status_t
+#include "t_inter.h"  // for Grid, calc_cell_size, get_triangles, intersect_...
 
 int main()
 {
@@ -28,8 +29,9 @@ int main()
     std::set<size_t> intersecting_ids;
 
     MSG("Intersecting close triangles\n");
-    status = t_inter::intersect_close_trinagles(intersecting_ids, triangles, grid);
-	if (t_inter::check_status(status))
+    status =
+        t_inter::intersect_close_trinagles(intersecting_ids, triangles, grid);
+    if (t_inter::check_status(status))
         return 0;
 
     MSG("The result:\n");
