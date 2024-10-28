@@ -13,6 +13,7 @@
 #include <unordered_set> // for unordered_set
 #include <utility>       // for pair
 #include <vector>        // for vector
+#include <optional>
 
 #include "bounding_box.h" // for Bounding_box
 #include "cell.h"         // for t_inter::detail::Cell
@@ -20,12 +21,13 @@
 #include "log.h"          // for LOG, MSG
 #include "triangle.h"     // for t_inter::Triangle3
 #include "vec.h" // for t_inter::Vec3, operator-, operator>>, t_inter::Point3
+#include "status.h"
 
 namespace t_inter
 {
 
 template <typename FltPnt>
-t_inter::detail::Cell discretize(const t_inter::Point3<FltPnt> &point,
+inline t_inter::detail::Cell discretize(const t_inter::Point3<FltPnt> &point,
                                  double cell_size)
 {
     return t_inter::detail::Cell(
@@ -33,14 +35,6 @@ t_inter::detail::Cell discretize(const t_inter::Point3<FltPnt> &point,
         static_cast<long long>(std::floor(point.y / cell_size)),
         static_cast<long long>(std::floor(point.z / cell_size)));
 }
-
-enum class status_t
-{
-    all_good,
-    invalid_amount,
-    invalid_coordinate,
-    invalid_open
-};
 
 template <typename FltPnt>
 using LabeledTriangle = std::pair<t_inter::Triangle3<FltPnt>, size_t>;
@@ -166,19 +160,19 @@ struct Hash_ul_pair
 using CollisionSet =
     std::unordered_set<std::pair<size_t, size_t>, Hash_ul_pair>;
 
-void add_checked_collision(CollisionSet &added_potentials, size_t a, size_t b)
+inline void add_checked_collision(CollisionSet &added_potentials, size_t a, size_t b)
 {
     added_potentials.insert({std::min(a, b), std::max(a, b)});
 }
 
-bool added_potentials_contains(const CollisionSet &added_potentials, size_t a,
+inline bool added_potentials_contains(const CollisionSet &added_potentials, size_t a,
                                size_t b)
 {
     return added_potentials.contains({std::min(a, b), std::max(a, b)});
 }
 
 template <typename FltPnt>
-void add_potential_collisions(
+inline void add_potential_collisions(
     const LabeledTriangles<FltPnt> &potential_triangles,
     const LabeledTriangle<FltPnt> &triangle,
     LabeledTriangles<FltPnt> &potential_collisions,
@@ -198,7 +192,7 @@ void add_potential_collisions(
 
 template <typename FltPnt>
 LabeledTriangles<FltPnt>
-close_triangles(const LabeledTriangle<FltPnt> &triangle,
+inline close_triangles(const LabeledTriangle<FltPnt> &triangle,
                 const Grid<FltPnt> &grid, CollisionSet &added_potentials)
 {
     LabeledTriangles<FltPnt> potential_collisions;
@@ -237,7 +231,7 @@ close_triangles(const LabeledTriangle<FltPnt> &triangle,
 }; // namespace detail
 
 template <typename FltPnt>
-status_t get_triangles(std::istream &in, LabeledTriangles<FltPnt> &triangles)
+inline status_t get_triangles(std::istream &in, LabeledTriangles<FltPnt> &triangles)
 {
     long long inputted_amount = 0;
     in >> inputted_amount;
@@ -271,7 +265,7 @@ status_t get_triangles(std::istream &in, LabeledTriangles<FltPnt> &triangles)
 }
 
 template <typename FltPnt>
-[[nodiscard]] FltPnt calc_cell_size(const LabeledTriangles<FltPnt> &triangles)
+[[nodiscard]] inline FltPnt calc_cell_size(const LabeledTriangles<FltPnt> &triangles)
 {
     FltPnt all_sides_length = 0;
 
@@ -291,20 +285,22 @@ template <typename FltPnt>
 
     FltPnt cell_size = static_cast<FltPnt>(
         detail::cell_size_coeff *
-        std::sqrt((all_sides_length / (triangles.size() * 3))));
+        std::sqrt((all_sides_length / static_cast<FltPnt>(triangles.size() * 3))));
     LOG("Calculated cell size: {}\n", cell_size);
 
     return cell_size;
 }
 
 template <typename FltPnt>
-void intersect_close_trinagles(std::set<size_t> &intersecting_ids,
+inline status_t intersect_close_trinagles(std::set<size_t> &intersecting_ids,
                                const LabeledTriangles<FltPnt> &triangles,
                                const Grid<FltPnt> &grid)
 {
-#ifdef DEBUG
+	status_t status = status_t::all_good;
+
+	#ifdef DEBUG
     [[maybe_unused]] size_t intersection_check_counter = 0;
-#endif
+	#endif
 
     detail::CollisionSet added_potentials;
 
@@ -317,13 +313,18 @@ void intersect_close_trinagles(std::set<size_t> &intersecting_ids,
 
         for (const auto &potential : potential_collisions)
         {
-#ifdef DEBUG
+			#ifdef DEBUG
             ++intersection_check_counter;
-#endif
+			#endif
 
             LOG("Checking the intersecton of {} and {}\n", triangle.second,
                 potential.second);
-            if (detail::intersects3(triangle.first, potential.first))
+
+			auto intersects = detail::intersects3(triangle.first, potential.first, status);
+
+			if (check_status(status)) return status;
+
+            if (intersects.value())
             {
                 LOG("YES: {} intersects {}\n\n", triangle.second,
                     potential.second);
@@ -338,33 +339,8 @@ void intersect_close_trinagles(std::set<size_t> &intersecting_ids,
 #ifdef DEBUG
     LOG("Intersection check amount: {}\n", intersection_check_counter);
 #endif
-}
 
-bool check_status(status_t status)
-{
-    if (status == status_t::all_good)
-        return false;
-
-    switch (status)
-    {
-        case status_t::all_good:
-            return true;
-        case status_t::invalid_amount:
-            std::cerr << "ERROR: Invalid amount: "
-                         "please enter non negative number\n";
-            break;
-        case status_t::invalid_coordinate:
-            std::cerr << "ERROR: Please enter floating point as the triangle "
-                         "coordinate\n";
-            break;
-        case status_t::invalid_open:
-            std::cerr << "ERROR: Can not open file\n";
-            break;
-        default:
-            std::cerr << "ERROR: Unknown\n";
-    }
-
-    return true;
+	return status;
 }
 
 }; // namespace t_inter

@@ -28,7 +28,9 @@ int main()
     std::set<size_t> intersecting_ids;
 
     MSG("Intersecting close triangles\n");
-    t_inter::intersect_close_trinagles(intersecting_ids, triangles, grid);
+    status = t_inter::intersect_close_trinagles(intersecting_ids, triangles, grid);
+	if (t_inter::check_status(status))
+        return 0;
 
     MSG("The result:\n");
     for (const auto &elem : intersecting_ids)

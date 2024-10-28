@@ -17,10 +17,10 @@ template <typename FltPnt> class Vec3
     FltPnt z = 0.0;
 
   public:
-    Vec3(FltPnt x = 0.0, FltPnt y = 0.0, FltPnt z = 0.0)
-        : x(x)
-        , y(y)
-        , z(z)
+    Vec3(FltPnt _x = 0.0, FltPnt _y = 0.0, FltPnt _z = 0.0)
+        : x(_x)
+        , y(_y)
+        , z(_z)
     {}
 
     Vec3(const Vec3 &other) = default;
@@ -159,9 +159,9 @@ template <typename FltPnt> class Vec2
         , y(0.0)
     {}
 
-    Vec2(FltPnt x, FltPnt y)
-        : x(x)
-        , y(y)
+    Vec2(FltPnt _x, FltPnt _y)
+        : x(_x)
+        , y(_y)
     {}
 
     Vec2 &operator+=(const Vec2 &other)

@@ -34,7 +34,6 @@ set(DEBUG_COMPILE_OPTIONS
 	-O0
 	-Wall
 	-Wextra
-	-Weffc++
 	-Wc++14-compat
 	-Wmissing-declarations
 	-Wcast-align

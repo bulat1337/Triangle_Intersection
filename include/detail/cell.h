@@ -15,10 +15,10 @@ struct Cell
 
     Cell() = default;
 
-    Cell(long long x, long long y, long long z)
-        : x(x)
-        , y(y)
-        , z(z)
+    Cell(long long _x, long long _y, long long _z)
+        : x(_x)
+        , y(_y)
+        , z(_z)
     {}
 
     bool operator==(const Cell &other) const = default;

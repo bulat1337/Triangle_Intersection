@@ -11,6 +11,7 @@
 #include "log.h"       // for MSG, LOG
 #include "utils.h"     // for sign, cmp_double, Axis, get_max_axis
 #include "vec.h"       // for Point3, Vec3, operator-, Vec2, dot, operator+
+#include "status.h"
 
 namespace t_inter
 {
@@ -25,10 +26,10 @@ template <typename Point> class Triangle_Base
   public:
     Triangle_Base() = default;
 
-    Triangle_Base(const Point &pnt_1, const Point &pnt_2, const Point &pnt_3)
-        : pnt_1(pnt_1)
-        , pnt_2(pnt_2)
-        , pnt_3(pnt_3)
+    Triangle_Base(const Point &_pnt_1, const Point &_pnt_2, const Point &_pnt_3)
+        : pnt_1(_pnt_1)
+        , pnt_2(_pnt_2)
+        , pnt_3(_pnt_3)
     {}
 
     Triangle_Base(const Triangle_Base &other)
@@ -83,7 +84,7 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
     detail::Cell max_cell_;
 
   private:
-    void sort_vertices(std::array<Point3<FltPnt>, 3> &points)
+    status_t sort_vertices(std::array<Point3<FltPnt>, 3> &points)
     {
         Vec3 normal = cross(points[1] - points[0], points[2] - points[0]);
         if (detail::utils::cmp_double(normal.sq_length(), 0) != 0)
@@ -137,6 +138,10 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
                               return angle1 < angle2;
                           });
                 break;
+			default:
+			{
+				return status_t::invalid_axis;
+			}
         }
 
         MSG("After sorting:\n");
@@ -144,6 +149,8 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
         {
             LOG("{} {} {}\n", point.x, point.y, point.z);
         }
+
+		return status_t::all_good;
     }
 
   public:
@@ -201,9 +208,9 @@ class Triangle2 : public Triangle_Base<Point2<FltPnt>>
     using Triangle_Base<Point2<FltPnt>>::pnt_3;
 
   public:
-    Triangle2(const Point2<FltPnt> &pnt_1, const Point2<FltPnt> &pnt_2,
-              const Point2<FltPnt> &pnt_3)
-        : Triangle_Base<Point2<FltPnt>>(pnt_1, pnt_2, pnt_3)
+    Triangle2(const Point2<FltPnt> &_pnt_1, const Point2<FltPnt> &_pnt_2,
+              const Point2<FltPnt> &_pnt_3)
+        : Triangle_Base<Point2<FltPnt>>(_pnt_1, _pnt_2, _pnt_3)
     {}
 
     bool contains(const Triangle2 &other) const

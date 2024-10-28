@@ -18,7 +18,9 @@ TEST(two_dimentional, basic_1)
     t_inter::Triangle3 triangle_1(A1, B1, C1);
     t_inter::Triangle3 triangle_2(A2, B2, C2);
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), true);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), true);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 TEST(two_dimentional, basic_2)
@@ -33,7 +35,9 @@ TEST(two_dimentional, basic_2)
         t_inter::Point3<double>(8.0, 7.0, 0.0),
         t_inter::Point3<double>(8.0, 4.0, 0.0));
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), false);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), false);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 TEST(two_dimentional, basic_3)
@@ -48,7 +52,9 @@ TEST(two_dimentional, basic_3)
         t_inter::Point3<double>(8.0, 4.0, 0.0),
         t_inter::Point3<double>(8.0, 7.0, 0.0));
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), true);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), true);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 TEST(two_dimentional, basic_4)
@@ -64,7 +70,9 @@ TEST(two_dimentional, basic_4)
     t_inter::Triangle3 triangle_1(A1, B1, C1);
     t_inter::Triangle3 triangle_2(A2, B2, C2);
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), true);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), true);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 // треугольник(2|0|0 1|1|0 4|1|0)
@@ -83,7 +91,9 @@ TEST(two_dimentional, one_point_intersection)
 
     t_inter::Triangle3 triangle_2(A2, B2, C2);
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), true);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), true);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 // треугольник(2|0|0 1|1|0 4|1|0)
@@ -102,7 +112,9 @@ TEST(two_dimentional, degen_triangle_1)
 
     t_inter::Triangle3 triangle_2(A2, B2, C2);
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), true);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), true);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 // треугольник(2|0|0 1|1|0 4|1|0)
@@ -121,7 +133,9 @@ TEST(two_dimentional, degen_triangle_2)
 
     t_inter::Triangle3 triangle_2(A2, B2, C2);
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), false);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), false);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 // треугольник(2|0|0 1|1|0 4|1|0)
@@ -140,7 +154,9 @@ TEST(two_dimentional, degen_triangle_one_point_intersection)
 
     t_inter::Triangle3 triangle_2(A2, B2, C2);
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), true);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), true);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 // треугольник(2|0|0 1|1|0 4|1|0)
@@ -159,7 +175,9 @@ TEST(two_dimentional, contained_superdegen)
 
     t_inter::Triangle3 triangle_2(A2, B2, C2);
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), true);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), true);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 // треугольник(2|0|0 1|1|0 4|1|0)
@@ -178,7 +196,9 @@ TEST(two_dimentional, superdegen_on_vert)
 
     t_inter::Triangle3 triangle_2(A2, B2, C2);
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), true);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), true);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 // треугольник(2|0|0 1|1|0 4|1|0)
@@ -197,7 +217,9 @@ TEST(two_dimentional, superdegen_on_side)
 
     t_inter::Triangle3 triangle_2(A2, B2, C2);
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), true);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), true);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 // треугольник(2|0|0 1|1|0 4|1|0)
@@ -216,7 +238,9 @@ TEST(two_dimentional, not_contained_superdegen)
 
     t_inter::Triangle3 triangle_2(A2, B2, C2);
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), false);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), false);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 TEST(three_dimentional, basic_1)
@@ -233,7 +257,9 @@ TEST(three_dimentional, basic_1)
 
     t_inter::Triangle3 triangle_2(A2, B2, C2);
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), true);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), true);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 TEST(three_dimentional, basic_2)
@@ -250,7 +276,9 @@ TEST(three_dimentional, basic_2)
 
     t_inter::Triangle3 triangle_2(A2, B2, C2);
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), true);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), true);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 TEST(three_dimentional, basic_3)
@@ -267,7 +295,9 @@ TEST(three_dimentional, basic_3)
 
     t_inter::Triangle3 triangle_2(A2, C2, B2);
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), true);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), true);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 TEST(three_dimentional, basic_4)
@@ -284,7 +314,9 @@ TEST(three_dimentional, basic_4)
 
     t_inter::Triangle3 triangle_2(A2, B2, C2);
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), false);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), false);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 // треугольник(1.0|4.0|3.0 2.0|2.0|2.0 -3.0|2.0|1.5)
@@ -303,7 +335,9 @@ TEST(three_dimentional, basic_5)
 
     t_inter::Triangle3 triangle_2(A2, B2, C2);
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), false);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), false);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 // треугольник(2|0|0 1|1|0 4|1|0)
@@ -322,7 +356,9 @@ TEST(three_dimentional, one_point_intersection)
 
     t_inter::Triangle3 triangle_2(A2, B2, C2);
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), true);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), true);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 // треугольник(2|0|1 3|4|3 7|1|2)
@@ -341,7 +377,9 @@ TEST(three_dimentional, degen_triangle_1)
 
     t_inter::Triangle3 triangle_2(A2, B2, C2);
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), false);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), false);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 // треугольник(2|0|1 3|8|3 7|6|2)
@@ -360,7 +398,9 @@ TEST(three_dimentional, degen_triangle_2)
 
     t_inter::Triangle3 triangle_2(A2, B2, C2);
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), true);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), true);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 // треугольник(2|0|1 3|8|3 7|6|2)
@@ -379,7 +419,9 @@ TEST(three_dimentional, degen_triangle_one_point_intersection)
 
     t_inter::Triangle3 triangle_2(A2, B2, C2);
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), true);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), true);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 // треугольник(-2.4|-0.9|10.7 1.1|0.9|18.4 -11.4|-9.0|18.1)
@@ -398,7 +440,9 @@ TEST(three_dimentional, basic_6)
 
     t_inter::Triangle3 triangle_2(A2, B2, C2);
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), true);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), true);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 // треугольник(-2.4|-0.9|10.7 1.1|0.9|18.4 -11.4|-9.0|18.1)
@@ -417,7 +461,9 @@ TEST(three_dimentional, basic_7)
 
     t_inter::Triangle3 triangle_2(A1, B1, C1);
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), true);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), true);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 // треугольник(9|9|9 9|9|9 9|9|9)
@@ -436,7 +482,9 @@ TEST(three_dimentional, degen_and_superdegen)
 
     t_inter::Triangle3 triangle_2(A1, B1, C1);
 
-    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2), false);
+	t_inter::status_t status = t_inter::status_t::all_good;
+    EXPECT_EQ(t_inter::detail::intersects3(triangle_1, triangle_2, status), false);
+	EXPECT_EQ(status, t_inter::status_t::all_good);
 }
 
 TEST(common, basic_1) { test_utils::run_test<double>("/common/basic_1"); }

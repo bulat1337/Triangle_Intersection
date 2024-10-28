@@ -4,6 +4,7 @@
 #include "intersects.h"
 
 #include <stddef.h> // for size_t
+#include <optional>
 
 #include "distances.h" // for Distances
 #include "interval.h"  // for Interval
@@ -13,6 +14,7 @@
 #include "triangle.h"  // for Triangle3, Triangle2, Triangle_Base
 #include "utils.h"     // for Axis, get_max_axis
 #include "vec.h"       // for Vec3, Point2, cross
+#include "status.h"
 
 namespace t_inter
 {
@@ -21,8 +23,9 @@ namespace detail
 {
 
 template <typename FltPnt>
-Triangle2<FltPnt> project(const Triangle3<FltPnt> &triangle,
-                          utils::Axis max_normal_axis)
+std::optional<Triangle2<FltPnt>> project(const Triangle3<FltPnt> &triangle,
+										 utils::Axis max_normal_axis,
+										 [[maybe_unused]]status_t status = status_t::all_good)
 {
     switch (max_normal_axis)
     {
@@ -47,6 +50,12 @@ Triangle2<FltPnt> project(const Triangle3<FltPnt> &triangle,
                 Point2<FltPnt>(triangle.pnt_1.x, triangle.pnt_1.y),
                 Point2<FltPnt>(triangle.pnt_2.x, triangle.pnt_2.y),
                 Point2<FltPnt>(triangle.pnt_3.x, triangle.pnt_3.y));
+		default:
+		{
+			status = status_t::invalid_axis;
+			return std::nullopt;
+		}
+
     }
 }
 
@@ -88,16 +97,17 @@ bool intersects2(const Triangle2<FltPnt> &lhs, const Triangle2<FltPnt> &rhs)
 }
 
 template <typename FltPnt>
-Interval compute_interval(Triangle3<FltPnt> triangle,
-                          Distances<FltPnt> &triangle_dists,
-                          const utils::Axis &max_axis)
+std::optional<Interval> compute_interval(	Triangle3<FltPnt> triangle,
+											Distances<FltPnt> &triangle_dists,
+											const utils::Axis &max_axis,
+											status_t &status)
 {
     triangle.distance_sort(triangle_dists);
 
     double min = 0.0;
     double max = 0.0;
 
-    auto get_coord = [max_axis](const Point3<FltPnt> &pnt)
+    auto get_coord = [max_axis, &status](const Point3<FltPnt> &pnt) -> std::optional<double>
     {
         switch (max_axis)
         {
@@ -107,26 +117,33 @@ Interval compute_interval(Triangle3<FltPnt> triangle,
                 return pnt.y;
             case utils::Axis::z:
                 return pnt.z;
+			default:
+			{
+				status = status_t::invalid_axis;
+				return std::nullopt;
+			}
         }
     };
 
-    double sim_coeff =
-        triangle_dists.first / (triangle_dists.first - triangle_dists.second);
+    auto coord1 = get_coord(triangle.pnt_1);
+    auto coord2 = get_coord(triangle.pnt_2);
+    auto coord3 = get_coord(triangle.pnt_3);
 
-    min = get_coord(triangle.pnt_1) +
-          (get_coord(triangle.pnt_2) - get_coord(triangle.pnt_1)) * sim_coeff;
+    if (!coord1 || !coord2 || !coord3) return std::nullopt;
 
-    sim_coeff =
-        triangle_dists.third / (triangle_dists.third - triangle_dists.second);
+    double sim_coeff = triangle_dists.first / (triangle_dists.first - triangle_dists.second);
 
-    max = get_coord(triangle.pnt_3) +
-          (get_coord(triangle.pnt_2) - get_coord(triangle.pnt_3)) * sim_coeff;
+    min = *coord1 + (*coord2 - *coord1) * sim_coeff;
+
+    sim_coeff = triangle_dists.third / (triangle_dists.third - triangle_dists.second);
+
+    max = *coord3 + (*coord2 - *coord3) * sim_coeff;
 
     return Interval(min, max);
 }
 
 template <typename FltPnt>
-bool intersects3(const Triangle3<FltPnt> &lhs, const Triangle3<FltPnt> &rhs)
+std::optional<bool> intersects3(const Triangle3<FltPnt> &lhs, const Triangle3<FltPnt> &rhs, status_t& status)
 {
     Plane3<FltPnt> rhs_plane(rhs.pnt_1, rhs.pnt_2, rhs.pnt_3);
 
@@ -154,23 +171,32 @@ bool intersects3(const Triangle3<FltPnt> &lhs, const Triangle3<FltPnt> &rhs)
 
         utils::Axis max_normal_axis = utils::get_max_axis(lhs_plane.normal());
 
-        return intersects2(project(lhs, max_normal_axis),
-                           project(rhs, max_normal_axis));
+		auto lhs_projection = project(lhs, max_normal_axis, status);
+		auto rhs_projection = project(rhs, max_normal_axis, status);
+
+		if (check_status(status)) return std::nullopt;
+
+        return intersects2(lhs_projection.value(), rhs_projection.value());
     }
 
     Vec3 intersection_line = cross(lhs_plane.normal(), rhs_plane.normal());
 
     utils::Axis max_axis = utils::get_max_axis(intersection_line);
 
-    Interval lhs_interval = compute_interval(lhs, lhs_dists, max_axis);
-    Interval rhs_interval = compute_interval(rhs, rhs_dists, max_axis);
+    auto lhs_interval = compute_interval(lhs, lhs_dists, max_axis, status);
+    auto rhs_interval = compute_interval(rhs, rhs_dists, max_axis, status);
 
-    LOG("lhs interval: [{} , {}]\n", lhs_interval.min(), lhs_interval.max());
-    LOG("rhs interval: [{} , {}]\n", rhs_interval.min(), rhs_interval.max());
+	if (   t_inter::check_status(status)
+		|| !lhs_interval.has_value()
+		|| !rhs_interval.has_value())
+		return std::nullopt;
 
-    if (lhs_interval.max() < rhs_interval.min())
+    LOG("lhs interval: [{} , {}]\n", lhs_interval.value().min(), lhs_interval.value().max());
+    LOG("rhs interval: [{} , {}]\n", rhs_interval.value().min(), rhs_interval.value().max());
+
+    if (lhs_interval.value().max() < rhs_interval.value().min())
         return false;
-    if (rhs_interval.max() < lhs_interval.min())
+    if (rhs_interval.value().max() < lhs_interval.value().min())
         return false;
 
     return true;
