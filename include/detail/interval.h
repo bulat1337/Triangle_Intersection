@@ -7,16 +7,15 @@ namespace t_inter
 namespace detail
 {
 
-class Interval
+class Interval final
 {
   private:
-    double min_ = 0.0;
-    double max_ = 0.0;
+    double min_;
+    double max_;
 
   public:
-    Interval() = default;
 
-    Interval(double min, double max)
+    Interval(double min = 0.0, double max = 0.0)
         : min_(std::min(min, max))
         , max_(std::max(min, max))
     {}

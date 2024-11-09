@@ -12,7 +12,7 @@ namespace t_inter
 namespace detail
 {
 
-template <typename FltPnt> class Bounding_box
+template <typename FltPnt> class Bounding_box final
 {
   private:
     Point3<FltPnt> min_;

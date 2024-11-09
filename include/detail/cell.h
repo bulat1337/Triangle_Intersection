@@ -7,21 +7,19 @@ namespace t_inter
 namespace detail
 {
 
-struct Cell
+struct Cell final
 {
-    long long x = 0;
-    long long y = 0;
-    long long z = 0;
+    long long x;
+    long long y;
+    long long z;
 
-    Cell() = default;
-
-    Cell(long long _x, long long _y, long long _z)
+    Cell(long long _x = 0, long long _y = 0, long long _z = 0)
         : x(_x)
         , y(_y)
         , z(_z)
     {}
 
-    bool operator==(const Cell &other) const = default;
+    bool operator <=>(const Cell &other) const = default;
 };
 
 }; // namespace detail

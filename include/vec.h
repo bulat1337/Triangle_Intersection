@@ -23,17 +23,6 @@ template <typename FltPnt> class Vec3
         , z(_z)
     {}
 
-    Vec3(const Vec3 &other) = default;
-
-    Vec3 &operator=(const Vec3 &other)
-    {
-        x = other.x;
-        y = other.y;
-        z = other.z;
-
-        return *this;
-    }
-
     Vec3 &operator+=(const Vec3 &other)
     {
         x += other.x;
@@ -56,13 +45,6 @@ template <typename FltPnt> class Vec3
 
     Vec3 operator-() const { return Vec3(-x, -y, -z); }
 
-    bool operator==(const Vec3 &other) const
-    {
-        return (std::fabs(x - other.x) < 1e-9) &&
-               (std::fabs(y - other.y) < 1e-9) &&
-               (std::fabs(z - other.z) < 1e-9);
-    }
-
     FltPnt sq_length() const { return x * x + y * y + z * z; }
 
     FltPnt length() const { return std::sqrt(sq_length()); }
@@ -75,49 +57,38 @@ template <typename FltPnt> class Vec3
 };
 
 template <typename FltPnt>
-inline Vec3<FltPnt> operator+(const Vec3<FltPnt> &lhs, const Vec3<FltPnt> &rhs)
+Vec3<FltPnt> operator+(const Vec3<FltPnt> &lhs, const Vec3<FltPnt> &rhs)
 {
     return Vec3(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z);
 }
 
 template <typename FltPnt>
-inline Vec3<FltPnt> operator-(const Vec3<FltPnt> &lhs, const Vec3<FltPnt> &rhs)
+Vec3<FltPnt> operator-(const Vec3<FltPnt> &lhs, const Vec3<FltPnt> &rhs)
 {
     return Vec3(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
 }
-template <typename FltPnt>
-inline Vec3<FltPnt> operator*(const Vec3<FltPnt> &lhs, const Vec3<FltPnt> &rhs)
-{
-    return Vec3(lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z);
-}
 
 template <typename FltPnt>
-inline Vec3<FltPnt> operator*(const Vec3<FltPnt> &lhs, FltPnt scalar)
+Vec3<FltPnt> operator*(const Vec3<FltPnt> &lhs, FltPnt scalar)
 {
     return Vec3(lhs.x * scalar, lhs.y * scalar, lhs.z * scalar);
 }
 
 template <typename FltPnt>
-inline Vec3<FltPnt> operator*(FltPnt scalar, const Vec3<FltPnt> &vec)
-{
-    return vec * scalar;
-}
-
-template <typename FltPnt>
-inline Vec3<FltPnt> operator/(const Vec3<FltPnt> &vec, FltPnt scalar)
+Vec3<FltPnt> operator/(const Vec3<FltPnt> &vec, FltPnt scalar)
 {
     return vec * (1 / scalar);
 }
 
 template <typename FltPnt>
-inline std::ostream &operator<<(std::ostream &out, const Vec3<FltPnt> &vec)
+std::ostream &operator<<(std::ostream &out, const Vec3<FltPnt> &vec)
 {
     out << vec.x << ' ' << vec.y << ' ' << vec.z;
     return out;
 }
 
 template <typename FltPnt>
-inline std::istream &operator>>(std::istream &in, Vec3<FltPnt> &vec)
+std::istream &operator>>(std::istream &in, Vec3<FltPnt> &vec)
 {
     in >> vec.x >> vec.y >> vec.z;
 
@@ -125,20 +96,20 @@ inline std::istream &operator>>(std::istream &in, Vec3<FltPnt> &vec)
 }
 
 template <typename FltPnt>
-inline double dot(const Vec3<FltPnt> &lhs, const Vec3<FltPnt> &rhs)
+double dot(const Vec3<FltPnt> &lhs, const Vec3<FltPnt> &rhs)
 {
     return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
 }
 
 template <typename FltPnt>
-inline Vec3<FltPnt> cross(const Vec3<FltPnt> &lhs, const Vec3<FltPnt> &rhs)
+Vec3<FltPnt> cross(const Vec3<FltPnt> &lhs, const Vec3<FltPnt> &rhs)
 {
     return Vec3(lhs.y * rhs.z - lhs.z * rhs.y, lhs.z * rhs.x - lhs.x * rhs.z,
                 lhs.x * rhs.y - lhs.y * rhs.x);
 }
 
 template <typename FltPnt>
-inline Vec3<FltPnt> unit_vector(const Vec3<FltPnt> &vector)
+Vec3<FltPnt> unit_vector(const Vec3<FltPnt> &vector)
 {
     return vector / vector.length();
 }
@@ -171,15 +142,6 @@ template <typename FltPnt> class Vec2
         return *this;
     }
 
-    Vec2 &operator*=(FltPnt scalar)
-    {
-        x *= scalar;
-        y *= scalar;
-        return *this;
-    }
-
-    Vec2 &operator/=(FltPnt scalar) { return *this *= (1 / scalar); }
-
     Vec2 operator-() const { return Vec2(-x, -y); }
 
     FltPnt sq_length() const { return x * x + y * y; }
@@ -195,50 +157,19 @@ template <typename FltPnt> class Vec2
 };
 
 template <typename FltPnt>
-inline Vec2<FltPnt> operator+(const Vec2<FltPnt> &lhs, const Vec2<FltPnt> &rhs)
+Vec2<FltPnt> operator+(const Vec2<FltPnt> &lhs, const Vec2<FltPnt> &rhs)
 {
     return Vec2(lhs.x + rhs.x, lhs.y + rhs.y);
 }
 
 template <typename FltPnt>
-inline Vec2<FltPnt> operator-(const Vec2<FltPnt> &lhs, const Vec2<FltPnt> &rhs)
+Vec2<FltPnt> operator-(const Vec2<FltPnt> &lhs, const Vec2<FltPnt> &rhs)
 {
     return Vec2(lhs.x - rhs.x, lhs.y - rhs.y);
 }
 
 template <typename FltPnt>
-inline Vec2<FltPnt> operator*(const Vec2<FltPnt> &lhs, const Vec2<FltPnt> &rhs)
-{
-    return Vec2(lhs.x * rhs.x, lhs.y * rhs.y);
-}
-
-template <typename FltPnt>
-inline Vec2<FltPnt> operator*(const Vec2<FltPnt> &lhs, FltPnt scalar)
-{
-    return Vec2(lhs.x * scalar, lhs.y * scalar);
-}
-
-template <typename FltPnt>
-inline Vec2<FltPnt> operator*(FltPnt scalar, const Vec2<FltPnt> &vec)
-{
-    return vec * scalar;
-}
-
-template <typename FltPnt>
-inline Vec2<FltPnt> operator/(const Vec2<FltPnt> &vec, FltPnt scalar)
-{
-    return vec * (1 / scalar);
-}
-
-template <typename FltPnt>
-inline std::ostream &operator<<(std::ostream &out, const Vec2<FltPnt> &vec)
-{
-    out << vec.x << ' ' << vec.y;
-    return out;
-}
-
-template <typename FltPnt>
-inline FltPnt dot(const Vec2<FltPnt> &lhs, const Vec2<FltPnt> &rhs)
+FltPnt dot(const Vec2<FltPnt> &lhs, const Vec2<FltPnt> &rhs)
 {
     return lhs.x * rhs.x + lhs.y * rhs.y;
 }

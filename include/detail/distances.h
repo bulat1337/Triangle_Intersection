@@ -13,7 +13,7 @@ namespace t_inter
 namespace detail
 {
 
-template <typename FltPnt> class Distances
+template <typename FltPnt> class Distances final
 {
   public:
     FltPnt first;

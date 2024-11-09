@@ -16,7 +16,7 @@ namespace t_inter
 namespace detail
 {
 
-template <typename FltPnt> class Segment2
+template <typename FltPnt> class Segment2 final
 {
   private:
     Point2<FltPnt> pnt_1_;

@@ -9,14 +9,14 @@ namespace t_inter
 namespace detail
 {
 
-template <typename FltPnt> class Plane3
+template <typename FltPnt> class Plane3 final
 {
   private:
     Vec3<FltPnt> normal_;
-    FltPnt origin_ = 0.0;
+    FltPnt origin_;
 
   public:
-    Plane3(const Vec3<FltPnt> &normal, FltPnt origin)
+    Plane3(const Vec3<FltPnt> &normal, FltPnt origin = 0.0)
         : normal_(normal)
         , origin_(origin)
     {}

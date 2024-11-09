@@ -27,7 +27,7 @@ namespace t_inter
 {
 
 template <typename FltPnt>
-inline t_inter::detail::Cell discretize(const t_inter::Point3<FltPnt> &point,
+t_inter::detail::Cell discretize(const t_inter::Point3<FltPnt> &point,
                                         double cell_size)
 {
     return t_inter::detail::Cell(
@@ -173,7 +173,7 @@ inline bool added_potentials_contains(const CollisionSet &added_potentials,
 }
 
 template <typename FltPnt>
-inline void
+void
 add_potential_collisions(const LabeledTriangles<FltPnt> &potential_triangles,
                          const LabeledTriangle<FltPnt> &triangle,
                          LabeledTriangles<FltPnt> &potential_collisions,
@@ -192,7 +192,7 @@ add_potential_collisions(const LabeledTriangles<FltPnt> &potential_triangles,
 }
 
 template <typename FltPnt>
-LabeledTriangles<FltPnt> inline close_triangles(
+LabeledTriangles<FltPnt> close_triangles(
     const LabeledTriangle<FltPnt> &triangle, const Grid<FltPnt> &grid,
     CollisionSet &added_potentials)
 {
@@ -232,7 +232,7 @@ LabeledTriangles<FltPnt> inline close_triangles(
 }; // namespace detail
 
 template <typename FltPnt>
-inline status_t get_triangles(std::istream &in,
+status_t get_triangles(std::istream &in,
                               LabeledTriangles<FltPnt> &triangles)
 {
     long long inputted_amount = 0;
@@ -267,7 +267,7 @@ inline status_t get_triangles(std::istream &in,
 }
 
 template <typename FltPnt>
-[[nodiscard]] inline FltPnt
+[[nodiscard]] FltPnt
 calc_cell_size(const LabeledTriangles<FltPnt> &triangles)
 {
     FltPnt all_sides_length = 0;
@@ -293,7 +293,7 @@ calc_cell_size(const LabeledTriangles<FltPnt> &triangles)
 }
 
 template <typename FltPnt>
-inline status_t
+status_t
 intersect_close_trinagles(std::set<size_t> &intersecting_ids,
                           const LabeledTriangles<FltPnt> &triangles,
                           const Grid<FltPnt> &grid)

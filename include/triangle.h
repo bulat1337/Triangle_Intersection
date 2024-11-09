@@ -16,6 +16,66 @@
 namespace t_inter
 {
 
+namespace detail
+{
+
+template <typename FltPnt>
+status_t sort_on_plane(	detail::utils::Axis dominant_axis,
+								std::array<Point3<FltPnt>, 3> &points,
+								const Point3<FltPnt>& center)
+{
+	switch (dominant_axis)
+	{
+		case detail::utils::Axis::z:
+			// projecting on XY
+			std::sort(points.begin(), points.end(),
+						[&center](const Point3<FltPnt> &p1,
+								const Point3<FltPnt> &p2)
+						{
+							double angle1 =
+								atan2(p1.y - center.y, p1.x - center.x);
+							double angle2 =
+								atan2(p2.y - center.y, p2.x - center.x);
+							return angle1 < angle2;
+						});
+			break;
+		case detail::utils::Axis::x:
+			// projecting on YZ
+			std::sort(points.begin(), points.end(),
+						[&center](const Point3<FltPnt> &p1,
+								const Point3<FltPnt> &p2)
+						{
+							double angle1 =
+								atan2(p1.z - center.z, p1.y - center.y);
+							double angle2 =
+								atan2(p2.z - center.z, p2.y - center.y);
+							return angle1 < angle2;
+						});
+			break;
+		case detail::utils::Axis::y:
+			// projecting on XZ
+			std::sort(points.begin(), points.end(),
+						[&center](const Point3<FltPnt> &p1,
+								const Point3<FltPnt> &p2)
+						{
+							double angle1 =
+								atan2(p1.z - center.z, p1.x - center.x);
+							double angle2 =
+								atan2(p2.z - center.z, p2.x - center.x);
+							return angle1 < angle2;
+						});
+			break;
+		default:
+		{
+			return status_t::invalid_axis;
+		}
+	}
+
+	return status_t::all_good;
+}
+
+};
+
 template <typename Point> class Triangle_Base
 {
   public:
@@ -72,7 +132,7 @@ std::istream &operator>>(std::istream &is, Triangle_Base<Point> &triangle)
 }
 
 template <typename FltPnt>
-class Triangle3 : public Triangle_Base<Point3<FltPnt>>
+class Triangle3 final : private Triangle_Base<Point3<FltPnt>>
 {
   public:
     using Triangle_Base<Point3<FltPnt>>::pnt_1;
@@ -87,62 +147,19 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
     status_t sort_vertices(std::array<Point3<FltPnt>, 3> &points)
     {
         Vec3 normal = cross(points[1] - points[0], points[2] - points[0]);
+
         if (detail::utils::cmp_double(normal.sq_length(), 0) != 0)
             normal = unit_vector(normal);
-
-        MSG("Normal vector is null-sized\n");
+		else
+			MSG("Normal vector is null-sized\n");
 
         Point3<FltPnt> center =
             (points[0] + points[1] + points[2]) / static_cast<FltPnt>(3.0);
 
-        detail::utils::Axis dominant_axis = detail::utils::get_max_axis(normal);
+		detail::utils::Axis dominant_axis = detail::utils::get_max_axis(normal);
 
-        switch (dominant_axis)
-        {
-            case detail::utils::Axis::z:
-                // projecting on XY
-                std::sort(points.begin(), points.end(),
-                          [&center](const Point3<FltPnt> &p1,
-                                    const Point3<FltPnt> &p2)
-                          {
-                              double angle1 =
-                                  atan2(p1.y - center.y, p1.x - center.x);
-                              double angle2 =
-                                  atan2(p2.y - center.y, p2.x - center.x);
-                              return angle1 < angle2;
-                          });
-                break;
-            case detail::utils::Axis::x:
-                // projecting on YZ
-                std::sort(points.begin(), points.end(),
-                          [&center](const Point3<FltPnt> &p1,
-                                    const Point3<FltPnt> &p2)
-                          {
-                              double angle1 =
-                                  atan2(p1.z - center.z, p1.y - center.y);
-                              double angle2 =
-                                  atan2(p2.z - center.z, p2.y - center.y);
-                              return angle1 < angle2;
-                          });
-                break;
-            case detail::utils::Axis::y:
-                // projecting on XZ
-                std::sort(points.begin(), points.end(),
-                          [&center](const Point3<FltPnt> &p1,
-                                    const Point3<FltPnt> &p2)
-                          {
-                              double angle1 =
-                                  atan2(p1.z - center.z, p1.x - center.x);
-                              double angle2 =
-                                  atan2(p2.z - center.z, p2.x - center.x);
-                              return angle1 < angle2;
-                          });
-                break;
-            default:
-            {
-                return status_t::invalid_axis;
-            }
-        }
+		status_t status = detail::sort_on_plane(dominant_axis, points, center);
+		if (check_status(status)) return status;
 
         MSG("After sorting:\n");
         for ([[maybe_unused]] const auto &point : points)
@@ -203,12 +220,13 @@ class Triangle3 : public Triangle_Base<Point3<FltPnt>>
 };
 
 template <typename FltPnt>
-class Triangle2 : public Triangle_Base<Point2<FltPnt>>
+class Triangle2 final : private Triangle_Base<Point2<FltPnt>>
 {
   public:
     using Triangle_Base<Point2<FltPnt>>::pnt_1;
     using Triangle_Base<Point2<FltPnt>>::pnt_2;
     using Triangle_Base<Point2<FltPnt>>::pnt_3;
+	using Triangle_Base<Point2<FltPnt>>::operator[];
 
   public:
     Triangle2(const Point2<FltPnt> &_pnt_1, const Point2<FltPnt> &_pnt_2,
